@@ -164,94 +164,250 @@
             <div class="form-group">
                 <label>Modal:</label>
                 <div style="display: flex;">
-                <div class="form-check" style="margin:10px;">
-                    <input class="form-check-input" type="radio" name="modal" id="aereo" value="aereo">
-                    <label class="form-check-label" for="aereo">Aéreo</label>
+                    <div class="form-check" style="margin:10px;">
+                        <input class="form-check-input" type="radio" name="modal" id="aereo" value="aereo"
+                            onchange="updateContainerOptions()">
+                        <label class="form-check-label" for="aereo">Aéreo</label>
+                    </div>
+                    <div class="form-check" style="margin:10px;">
+                        <input class="form-check-input" type="radio" name="modal" id="maritimo" value="maritimo"
+                            onchange="updateContainerOptions()">
+                        <label class="form-check-label" for="maritimo">Marítimo</label>
+                    </div>
                 </div>
-                <div class="form-check"  style="margin:10px;">
-                    <input class="form-check-input" type="radio" name="modal" id="maritimo" value="maritimo" onchange="updateContainerOptions()">
-                    <label class="form-check-label" for="maritimo">Marítimo</label>
-                </div>
-            </div>
             </div>
 
             <!-- se for maritimo -->
             <div class="form-group" id="containerOptions" style="display: none;">
-                <label>Selecione o tipo de container</label>
+                <label>Selecione o(s) tipo(s) de container(s)</label>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="20" id="20" value="20">
-                    <label class="form-check-label" for="20">20’</label>
-                    <div class="form-group" id="containerQuantity" style="display: none;">
-                        <label for="quantity">Quantidade de container:</label>
-                        <input type="number" class="form-control" id="quantity" min="0" required>
-                    </div>
+                    <input class="form-check-input" type="checkbox" name="container" id="container20" value="20"
+                        onchange="updateContainerQuantity('container20')">
+                    <label class="form-check-label" for="container20">20’</label>
+                    <input type="number" class="form-control" id="quantity20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="40" id="40" value="40">
-                    <label class="form-check-label" for="40">40’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="container40" value="40"
+                        onchange="updateContainerQuantity('container40')">
+                    <label class="form-check-label" for="container40">40’</label>
+                    <input type="number" class="form-control" id="quantity40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="High Cube 40" id="High Cube 40" value="High Cube 40">
-                    <label class="form-check-label" for="High Cube 40">High Cube 40’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="containerHighCube40"
+                        value="High Cube 40" onchange="updateContainerQuantity('containerHighCube40')">
+                    <label class="form-check-label" for="containerHighCube40">High Cube 40’</label>
+                    <input type="number" class="form-control" id="quantityHighCube40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Graneleiro Dry 20" id="Graneleiro Dry 20" value="Graneleiro Dry 20">
-                    <label class="form-check-label" for="Graneleiro Dry 20">Graneleiro Dry 20’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="GraneleiroDry20"
+                        value="Graneleiro Dry 20" onchange="updateContainerQuantity('GraneleiroDry20')">
+                    <label class="form-check-label" for="GraneleiroDry20">Graneleiro Dry 20’</label>
+                    <input type="number" class="form-control" id="quantityGraneleiroDry20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Flat Rack  20" id="Flat Rack  20" value="Flat Rack  20">
-                    <label class="form-check-label" for="Flat Rack  20">Flat Rack  20’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="FlatRack20"
+                        value="Flat Rack 20" onchange="updateContainerQuantity('FlatRack20')">
+                    <label class="form-check-label" for="FlatRack20">Flat Rack 20’</label>
+                    <input type="number" class="form-control" id="quantityFlatRack20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Flat Rack 40" id="Flat Rack 40" value="Flat Rack 40">
-                    <label class="form-check-label" for="Flat Rack 40">Flat Rack 40’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="FlatRack40"
+                        value="Flat Rack 40" onchange="updateContainerQuantity('FlatRack40')">
+                    <label class="form-check-label" for="FlatRack40">Flat Rack 40’</label>
+                    <input type="number" class="form-control" id="quantityFlatRack40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Container Tanque" id="Container Tanque" value="Container Tanque">
-                    <label class="form-check-label" for="Container Tanque">Container Tanque</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="ContainerTanque"
+                        value="Container Tanque" onchange="updateContainerQuantity('ContainerTanque')">
+                    <label class="form-check-label" for="ContainerTanque">Container Tanque</label>
+                    <input type="number" class="form-control" id="quantityContainerTanque" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Container Ventilado" id="Container Ventilado" value="Container Ventilado">
-                    <label class="form-check-label" for="Container Ventilado">Container Ventilado</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="ContainerVentilado"
+                        value="Container Ventilado" onchange="updateContainerQuantity('ContainerVentilado')">
+                    <label class="form-check-label" for="ContainerVentilado">Container Ventilado</label>
+                    <input type="number" class="form-control" id="quantityContainerVentilado" min="0"
+                        style="display:none;" placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Open Top 20" id="Open Top 20" value="Open Top 20">
-                    <label class="form-check-label" for="Open Top 20">Open Top 20’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="OpenTop20" value="Open Top 20"
+                        onchange="updateContainerQuantity('OpenTop20')">
+                    <label class="form-check-label" for="OpenTop20">Open Top 20’</label>
+                    <input type="number" class="form-control" id="quantityOpenTop20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Open Top 40" id="Open Top 40" value="Open Top 40">
-                    <label class="form-check-label" for=" Open Top 40"> Open Top 40’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="OpenTop40" value="Open Top 40"
+                        onchange="updateContainerQuantity('OpenTop40')">
+                    <label class="form-check-label" for="OpenTop40">Open Top 40’</label>
+                    <input type="number" class="form-control" id="quantityOpenTop40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Refrigerado 20" id="Refrigerado 20" value="Refrigerado 20">
-                    <label class="form-check-label" for=" Refrigerado 20"> Refrigerado 20’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="Refrigerado20"
+                        value="Refrigerado 20" onchange="updateContainerQuantity('Refrigerado20')">
+                    <label class="form-check-label" for="Refrigerado20">Refrigerado 20’</label>
+                    <input type="number" class="form-control" id="quantityRefrigerado20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="Refrigerado 40" id="Refrigerado 40" value="Refrigerado 40">
-                    <label class="form-check-label" for="Refrigerado 40">Refrigerado 40’</label>
+                    <input class="form-check-input" type="checkbox" name="container" id="Refrigerado40"
+                        value="Refrigerado 40" onchange="updateContainerQuantity('Refrigerado40')">
+                    <label class="form-check-label" for="Refrigerado40">Refrigerado 40’</label>
+                    <input type="number" class="form-control" id="quantityRefrigerado40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
                 </div>
             </div>
+            <!-- Fim  maritimo -->
 
+            <!--Aereo-->
+            <div id="modal-aereo-section" style="display: none;">
+                <div class="form-group">
+                    <label for="num-caixas">Quantidade de Caixas:</label>
+                    <input type="number" class="form-control" id="num-caixas" min="0">
+                </div>
+                <div id="caixas-section"></div>
+            </div>
 
+            <div class="form-group">
+                <label for="embarque">Porto/Aeroporto de Embarque-País:</label>
+                <input class="form-control" type="text" value="" id="embarque" name="embarque">
+            </div>
+
+            <div class="form-group">
+                <label for="destino">Porto/Aeroporto de Destino-País:</label>
+                <input  class="form-control" type="text" value="" id="destino" name="destino">
+            </div>
+
+            <div class="form-group">
+                <label for="desembaraco">LOCAL DO DESEMBARAÇO ADUANEIRO</label>
+                <select class="form-control" id="desembaraco">
+                    <option value="">Selecione...</option>
+                    <option value="pernambuco">Pernambuco</option>
+                    <option value="outro">Outros</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="valor">Valor da Mercadoria:</label>
+                <input type="number" class="form-control" id="valor" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Taxa do Dólar (Atualizada):</label>
+                <input type="text" class="form-control" id="taxa-dolar" readonly>
+            </div>
 
             <button type="button" id="enviar-formulario" class="btn btn-primary">Enviar</button>
         </form>
     </div>
 
     <script>
+        //Se tipo de acondicionamento for containers
+        function updateAcondicionamentoContainer() {
+            var acondicionamento = document.getElementById('acondicionamento').value;
+            if (acondicionamento === "containers") {
+                document.getElementById('divacondicionamentocontainer').style.display = 'block';
+            } else {
+                document.getElementById('divacondicionamentocontainer').style.display = 'none';
+            }
+        }
+
+        //Verifica o Modal, se é maritimo ou Aereo
         function updateContainerOptions() {
             var modalMaritimo = document.getElementById('maritimo');
             var containerOptions = document.getElementById('containerOptions');
-            var containerQuantity = document.getElementById('containerQuantity');
+            var modalaereo = document.getElementById('aereo');
+            var containeraereo = document.getElementById('modal-aereo-section');
 
             if (modalMaritimo.checked) {
                 containerOptions.style.display = 'block';
-                containerQuantity.style.display = 'block'; // Exibir também o campo de quantidade
             } else {
                 containerOptions.style.display = 'none';
+            }
+
+            if (modalaereo.checked) {
+                containeraereo.style.display = 'block';
+            } else {
+                containeraereo.style.display = 'none';
+            }
+        }
+
+        // Coloca o input de quantidade de containers de acordo com o que seleciona
+        function updateContainerQuantity(containerType) {
+            var containerQuantity = document.getElementById('quantity' + containerType.replace('container', ''));
+            var containerCheckbox = document.getElementById(containerType);
+
+            if (containerCheckbox.checked) {
+                containerQuantity.style.display = 'block';
+            } else {
                 containerQuantity.style.display = 'none';
             }
         }
+
+        //gera os inputs das metricas das caixas
+        const numCaixasInput = document.getElementById('num-caixas');
+        const caixasSection = document.getElementById('caixas-section');
+        numCaixasInput.addEventListener('input', () => {
+            const numCaixas = parseInt(numCaixasInput.value);
+            caixasSection.innerHTML = '';
+            for (let i = 1; i <= numCaixas; i++) {
+                caixasSection.innerHTML += `
+            <div class="form-group">
+                <label>CAIXA ${i}:</label>
+                <div class="aliguotas" style=display:flex;>
+                <div>
+                    <label for="altura-${i}">Altura (cm):</label>
+                    <input type="number" class="form-control" id="altura-${i}" min="0" required style=margin:0 10px>
+                </div>
+                <div>
+                    <label for="largura-${i}">Largura (cm):</label>
+                    <input type="number" class="form-control" id="largura-${i}" min="0" required style=margin:0 10px>
+                </div>
+                <div>
+                    <label for="comprimento-${i}">Comprimento (cm):</label>
+                    <input type="number" class="form-control" id="comprimento-${i}" min="0" required style=margin:0 10px>
+                </div>
+                </div>
+            </div>
+            `;
+            }
+        });
+
+        // Buscar taxa do dólar (ExchangeRate-API)
+        function getExchangeRate() {
+            const apiKey = 'eadabe972086bea4a3baa6c4';
+            const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar taxa de câmbio');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Aqui você pode acessar os dados da taxa de câmbio e usá-los conforme necessário
+                    console.log('Dados da taxa de câmbio:', data);
+                    const exchangeRate = data.conversion_rates.BRL;
+                    const formattedExchangeRate = exchangeRate.toFixed(2); // Formata para ter apenas dois números após o ponto decimal
+                    document.getElementById('taxa-dolar').value = `R$ ${formattedExchangeRate}`;
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar taxa do dólar:', error);
+                    alert('Ocorreu um erro ao buscar a taxa do dólar.');
+                });
+        }
+
+        // Chamada à função para buscar a taxa de câmbio quando a página carrega
+        window.addEventListener('load', getExchangeRate);
     </script>
 </body>
 
