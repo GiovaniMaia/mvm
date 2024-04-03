@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Exportação</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+            padding: 30px;
+            background-color: #f5f5f5;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .aliquotas-group {
+            display: flex;
+        }
+
+        .aliquotas {
+            flex: 1 0 50%;
+            margin-bottom: 20px;
+        }
+
+        .vertical-line {
+            border-left: 1px solid #ccc;
+            height: 100%;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Formulário de Exportação</h1>
+        <form>
+            <!-- Descrição da Mercadoria -->
+            <div class="form-group">
+                <label for="descricao">Descrição da Mercadoria:</label>
+                <input type="text" class="form-control" id="descricao" required>
+            </div>
+
+            <!-- Classificação Fiscal-SH/NCM -->
+            <div class="form-group">
+                <label for="classificacao">Classificação Fiscal-SH/NCM:</label>
+                <input type="text" class="form-control" id="classificacao" required>
+            </div>
+
+            <!-- Alíquotas -->
+            <div class="form-group" style="border: 1px solid; padding: 30px;">
+                <label>ALÍQUOTAS:</label>
+                <div class="aliquotas-group">
+                    <div class="aliquotas">
+                        <div>
+                            <label for="ii">II:</label>
+                            <input type="number" class="form-control" id="ii" min="0" max="100" required>%
+                        </div>
+                        <div>
+                            <label for="pis">PIS:</label>
+                            <input type="number" class="form-control" id="pis" min="0" max="100" required>%
+                        </div>
+                    </div>
+                    <hr class="vertical-line">
+                    <div class="aliquotas">
+                        <div>
+                            <label for="ipi">IPI:</label>
+                            <input type="number" class="form-control" id="ipi" min="0" max="100" required>%
+                        </div>
+                        <div>
+                            <label for="cofins">COFINS:</label>
+                            <input type="number" class="form-control" id="cofins" min="0" max="100" required>%
+                        </div>
+                        <div>
+                            <label for="icms">ICMS:</label>
+                            <input type="number" class="form-control" id="icms" min="0" max="100" required>%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Peso Bruto, Quantidade, etc. -->
+            <div class="form-group">
+                <label for="peso">Peso Bruto (Kgs):</label>
+                <input type="number" class="form-control" id="peso" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade:</label>
+                <input type="number" class="form-control" id="quantidade" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="incoterm">INCOTERM:</label>
+                <input type="text" class="form-control" id="incoterm" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lis">Nº ESTIMADO DE L.I.´s:</label>
+                <input type="number" class="form-control" id="lis" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="li_lcpo">Nº ESTIMADO DE ADIÇÕES À L.I.-LCPO</label>
+                <input type="number" class="form-control" id="li_lcpo" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="di_duimp">Nº ESTIMADO DE ADIÇÕES À DI-DUIMP</label>
+                <input type="number" class="form-control" id="di_duimp" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="desembaraco">Local do desembaraço aduaneiro</label>
+                <select class="form-control" name="desembaraco" id="desembaraco">
+                    <option value="Pernambuco">Pernambuco</option>
+                    <option value="Outro Estado">Outro Estado</option>
+                </select>
+            </div>
+
+            <!-- Tipo de Acondicionamento -->
+            <div class="form-group">
+                <label for="acondicionamento">Tipo de Acondicionamento:</label>
+                <select class="form-control" id="acondicionamento" onchange="updateAcondicionamentoContainer()">
+                    <option value="">Selecione...</option>
+                    <option value="sacaria">Sacaria</option>
+                    <option value="Caixa de Madeira">Caixa de Madeira</option>
+                    <option value="Caixa de Papelão">Caixa de Papelão</option>
+                    <option value="Tambores de Metal">Tambores de Metal</option>
+                    <option value="Tambores plásticos">Tambores plásticos</option>
+                    <option value="Pallets">Pallets</option>
+                    <option value="IBC-Intermediate Bulk Container">IBC-Intermediate Bulk Container</option>
+                    <option value="containers">Containers</option>
+                </select>
+            </div>
+
+            <!-- Caso for container -->
+            <div id="divacondicionamentocontainer" style="display: none;">
+                <div class="form-group">
+                    <label for="acondicionamentocontainer">Seleciona o tipo de carga</label>
+                    <select class="form-control" id="acondicionamentocontainer">
+                        <option value="">Selecione...</option>
+                        <option value="cargas gerais">cargas gerais (cargas secas, como autopeças, maquinários, móveis e
+                            roupas);</option>
+                        <option value="cargas refrigeradas">cargas refrigeradas (transportadas em containers reefers,
+                            como carne, frango e vacinas);</option>
+                        <option value="cargas químicas"> cargas químicas ( produtos corrosivos, inflamáveis e explosivos
+                            – controlados pela Polícia Civil, Polícia Federal, Exército e Ibama. Medicamentos/cosméticos
+                            – controlados pela ANVISA).</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tipo de modal -->
+            <div class="form-group">
+                <label>Modal:</label>
+                <div style="display: flex;">
+                    <div class="form-check" style="margin:10px;">
+                        <input class="form-check-input" type="radio" name="modal" id="aereo" value="aereo"
+                            onchange="updateContainerOptions()">
+                        <label class="form-check-label" for="aereo">Aéreo</label>
+                    </div>
+                    <div class="form-check" style="margin:10px;">
+                        <input class="form-check-input" type="radio" name="modal" id="maritimo" value="maritimo"
+                            onchange="updateContainerOptions()">
+                        <label class="form-check-label" for="maritimo">Marítimo</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- se for maritimo -->
+            <div class="form-group" id="containerOptions" style="display: none;">
+                <label>Selecione o(s) tipo(s) de container(s)</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="container20" value="20"
+                        onchange="updateContainerQuantity('container20')">
+                    <label class="form-check-label" for="container20">20’</label>
+                    <input type="number" class="form-control" id="quantity20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="container40" value="40"
+                        onchange="updateContainerQuantity('container40')">
+                    <label class="form-check-label" for="container40">40’</label>
+                    <input type="number" class="form-control" id="quantity40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="containerHighCube40"
+                        value="High Cube 40" onchange="updateContainerQuantity('containerHighCube40')">
+                    <label class="form-check-label" for="containerHighCube40">High Cube 40’</label>
+                    <input type="number" class="form-control" id="quantityHighCube40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="GraneleiroDry20"
+                        value="Graneleiro Dry 20" onchange="updateContainerQuantity('GraneleiroDry20')">
+                    <label class="form-check-label" for="GraneleiroDry20">Graneleiro Dry 20’</label>
+                    <input type="number" class="form-control" id="quantityGraneleiroDry20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="FlatRack20"
+                        value="Flat Rack 20" onchange="updateContainerQuantity('FlatRack20')">
+                    <label class="form-check-label" for="FlatRack20">Flat Rack 20’</label>
+                    <input type="number" class="form-control" id="quantityFlatRack20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="FlatRack40"
+                        value="Flat Rack 40" onchange="updateContainerQuantity('FlatRack40')">
+                    <label class="form-check-label" for="FlatRack40">Flat Rack 40’</label>
+                    <input type="number" class="form-control" id="quantityFlatRack40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="ContainerTanque"
+                        value="Container Tanque" onchange="updateContainerQuantity('ContainerTanque')">
+                    <label class="form-check-label" for="ContainerTanque">Container Tanque</label>
+                    <input type="number" class="form-control" id="quantityContainerTanque" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="ContainerVentilado"
+                        value="Container Ventilado" onchange="updateContainerQuantity('ContainerVentilado')">
+                    <label class="form-check-label" for="ContainerVentilado">Container Ventilado</label>
+                    <input type="number" class="form-control" id="quantityContainerVentilado" min="0"
+                        style="display:none;" placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="OpenTop20" value="Open Top 20"
+                        onchange="updateContainerQuantity('OpenTop20')">
+                    <label class="form-check-label" for="OpenTop20">Open Top 20’</label>
+                    <input type="number" class="form-control" id="quantityOpenTop20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="OpenTop40" value="Open Top 40"
+                        onchange="updateContainerQuantity('OpenTop40')">
+                    <label class="form-check-label" for="OpenTop40">Open Top 40’</label>
+                    <input type="number" class="form-control" id="quantityOpenTop40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="Refrigerado20"
+                        value="Refrigerado 20" onchange="updateContainerQuantity('Refrigerado20')">
+                    <label class="form-check-label" for="Refrigerado20">Refrigerado 20’</label>
+                    <input type="number" class="form-control" id="quantityRefrigerado20" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="container" id="Refrigerado40"
+                        value="Refrigerado 40" onchange="updateContainerQuantity('Refrigerado40')">
+                    <label class="form-check-label" for="Refrigerado40">Refrigerado 40’</label>
+                    <input type="number" class="form-control" id="quantityRefrigerado40" min="0" style="display:none;"
+                        placeholder="Digita aqui a quantidade de Containers">
+                </div>
+            </div>
+            <!-- Fim  maritimo -->
+
+            <!--Aereo-->
+            <div id="modal-aereo-section" style="display: none;">
+                <div class="form-group">
+                    <label for="num-caixas">Quantidade de Caixas:</label>
+                    <input type="number" class="form-control" id="num-caixas" min="0">
+                </div>
+                <div id="caixas-section"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="embarque">Porto/Aeroporto de Embarque-País:</label>
+                <input class="form-control" type="text" value="" id="embarque" name="embarque">
+            </div>
+
+            <div class="form-group">
+                <label for="destino">Porto/Aeroporto de Destino-País:</label>
+                <input  class="form-control" type="text" value="" id="destino" name="destino">
+            </div>
+
+            <div class="form-group">
+                <label for="desembaraco">LOCAL DO DESEMBARAÇO ADUANEIRO</label>
+                <select class="form-control" id="desembaraco">
+                    <option value="">Selecione...</option>
+                    <option value="pernambuco">Pernambuco</option>
+                    <option value="outro">Outros</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="valor">Valor da Mercadoria:</label>
+                <input type="number" class="form-control" id="valor" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Taxa do Dólar (Atualizada):</label>
+                <input type="text" class="form-control" id="taxa-dolar" readonly>
+            </div>
+
+            <button type="button" id="enviar-formulario" class="btn btn-primary" onclick="converter()">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        //Se tipo de acondicionamento for containers
+        function updateAcondicionamentoContainer() {
+            var acondicionamento = document.getElementById('acondicionamento').value;
+            if (acondicionamento === "containers") {
+                document.getElementById('divacondicionamentocontainer').style.display = 'block';
+            } else {
+                document.getElementById('divacondicionamentocontainer').style.display = 'none';
+            }
+        }
+
+        //Verifica o Modal, se é maritimo ou Aereo
+        function updateContainerOptions() {
+            var modalMaritimo = document.getElementById('maritimo');
+            var containerOptions = document.getElementById('containerOptions');
+            var modalaereo = document.getElementById('aereo');
+            var containeraereo = document.getElementById('modal-aereo-section');
+
+            if (modalMaritimo.checked) {
+                containerOptions.style.display = 'block';
+            } else {
+                containerOptions.style.display = 'none';
+            }
+
+            if (modalaereo.checked) {
+                containeraereo.style.display = 'block';
+            } else {
+                containeraereo.style.display = 'none';
+            }
+        }
+
+        // Coloca o input de quantidade de containers de acordo com o que seleciona
+        function updateContainerQuantity(containerType) {
+            var containerQuantity = document.getElementById('quantity' + containerType.replace('container', ''));
+            var containerCheckbox = document.getElementById(containerType);
+
+            if (containerCheckbox.checked) {
+                containerQuantity.style.display = 'block';
+            } else {
+                containerQuantity.style.display = 'none';
+            }
+        }
+
+        //gera os inputs das metricas das caixas
+        const numCaixasInput = document.getElementById('num-caixas');
+        const caixasSection = document.getElementById('caixas-section');
+        numCaixasInput.addEventListener('input', () => {
+            const numCaixas = parseInt(numCaixasInput.value);
+            caixasSection.innerHTML = '';
+            for (let i = 1; i <= numCaixas; i++) {
+                caixasSection.innerHTML += `
+            <div class="form-group">
+                <label>CAIXA ${i}:</label>
+                <div class="aliguotas" style=display:flex;>
+                <div>
+                    <label for="altura-${i}">Altura (cm):</label>
+                    <input type="number" class="form-control" id="altura-${i}" min="0" required style=margin:0 10px>
+                </div>
+                <div>
+                    <label for="largura-${i}">Largura (cm):</label>
+                    <input type="number" class="form-control" id="largura-${i}" min="0" required style=margin:0 10px>
+                </div>
+                <div>
+                    <label for="comprimento-${i}">Comprimento (cm):</label>
+                    <input type="number" class="form-control" id="comprimento-${i}" min="0" required style=margin:0 10px>
+                </div>
+                </div>
+            </div>
+            `;
+            }
+        });
+
+        // Buscar taxa do dólar (ExchangeRate-API)
+        function getExchangeRate() {
+            const apiKey = 'eadabe972086bea4a3baa6c4';
+            const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao buscar taxa de câmbio');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Aqui você pode acessar os dados da taxa de câmbio e usá-los conforme necessário
+                    console.log('Dados da taxa de câmbio:', data);
+                    const exchangeRate = data.conversion_rates.BRL;
+                    const formattedExchangeRate = exchangeRate.toFixed(2); // Formata para ter apenas dois números após o ponto decimal
+                    document.getElementById('taxa-dolar').value = `R$ ${formattedExchangeRate}`;
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar taxa do dólar:', error);
+                    alert('Ocorreu um erro ao buscar a taxa do dólar.');
+                });
+        }
+
+        // Chamada à função para buscar a taxa de câmbio quando a página carrega
+        window.addEventListener('load', getExchangeRate);
+
+        function converter(){
+            var form = document.querySelector("form");
+            form.addEventListener("submit",function(evento){
+              evento.preventDefault();
+            })
+
+                var descricao = document.getElementById('descricao').value;
+                var classificacao = document.getElementById('classificacao').value;
+                var ii = document.getElementById('ii').value;
+                var pis = document.getElementById('pis').value;
+                var ipi = document.getElementById('ipi').value;
+                var cofins = document.getElementById('cofins').value;
+                var icms = document.getElementById('icms').value;
+                var peso = document.getElementById('peso').value;
+                var quantidade = document.getElementById('quantidade').value;
+                var incoterm = document.getElementById('incoterm').value;
+                var lis = document.getElementById('lis').value;
+                var li_lcpo = document.getElementById('li_lcpo').value;
+                var di_duimp = document.getElementById('di_duimp').value;
+                var desembaraco = document.getElementById('desembaraco').value;
+                var acondicionamento = document.getElementById('acondicionamento').value;
+                var acondicionamentocontainer = document.getElementById('acondicionamentocontainer').value;
+                var modal = document.querySelector('input[name="modal"]:checked').value;
+                var embarque = document.getElementById('embarque').value;
+                var destino = document.getElementById('destino').value;
+                var valor = document.getElementById('valor').value;
+            
+                //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional 
+                if (desembaraco == "Pernambuco"){
+                    if (di_duimp == 1){
+                        var Ger_Log_Importacao = 4 * 1412;
+                    } else if (di_duimp > 1  <= 5){
+                        var Ger_Log_Importacao = 0.9 * 1412 * di_duimp;
+                    } else if (di_duimp > 5  <= 10){
+                        var Ger_Log_Importacao = 0.8 * 1412 * di_duimp;
+                    } else if (di_duimp > 10  <= 15){
+                        var Ger_Log_Importacao = 0.7 * 1412 * di_duimp;
+                    } else if (di_duimp > 15){
+                        var Ger_Log_Importacao = 0.6 * 1412 * di_duimp;
+                    }
+
+                }else{
+                    if (di_duimp == 1){
+                        var Ger_Log_Importacao = 5 * 1412;
+                        alert (Ger_Log_Importacao);
+                    } else if (di_duimp > 1  <= 5){
+                        var Ger_Log_Importacao = 0.95 * 1412 * di_duimp;
+                        alert (Ger_Log_Importacao);
+                    } else if (di_duimp > 5  <= 10){
+                        var Ger_Log_Importacao = 0.85 * 1412 * di_duimp;
+                    } else if (di_duimp > 10  <= 15){
+                        var Ger_Log_Importacao = 0.75 * 1412 * di_duimp;
+                    } else if (di_duimp > 15){
+                        var Ger_Log_Importacao = 0.65 * 1412 * di_duimp;
+                    } 
+                }
+
+
+                var data = {
+                    descricao : descricao,
+                    classificacao : classificacao,
+                    ii: ii,
+                    pis: pis,
+                    ipi: ipi,
+                    cofins: cofins,
+                    icms: icms,
+                    peso: peso,
+                    quantidade: quantidade,
+                    incoterm : incoterm,
+                    lis : lis,
+                    li_lcpo : li_lcpo,
+                    di_duimp : di_duimp,
+                    desembaraco : desembaraco,
+                    acondicionamento: acondicionamento,
+                    acondicionamentocontainer: acondicionamentocontainer,
+                    modal: modal,
+                    embarque : embarque,
+                    destino: destino,
+                    valor: valor,
+                    Ger_Log_Importacao : Ger_Log_Importacao
+                };
+        
+                    $.ajax({
+                    url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+        }
+            
+    </script>
+</body>
+
+</html>
