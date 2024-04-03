@@ -414,7 +414,100 @@
             form.addEventListener("submit",function(evento){
               evento.preventDefault();
             })
+ test
+
+                var descricao = document.getElementById('descricao').value;
+                var classificacao = document.getElementById('classificacao').value;
+                var ii = document.getElementById('ii').value;
+                var pis = document.getElementById('pis').value;
+                var ipi = document.getElementById('ipi').value;
+                var cofins = document.getElementById('cofins').value;
+                var icms = document.getElementById('icms').value;
+                var peso = document.getElementById('peso').value;
+                var quantidade = document.getElementById('quantidade').value;
+                var incoterm = document.getElementById('incoterm').value;
+                var lis = document.getElementById('lis').value;
+                var li_lcpo = document.getElementById('li_lcpo').value;
+                var di_duimp = document.getElementById('di_duimp').value;
+                var desembaraco = document.getElementById('desembaraco').value;
+                var acondicionamento = document.getElementById('acondicionamento').value;
+                var acondicionamentocontainer = document.getElementById('acondicionamentocontainer').value;
+                var modal = document.querySelector('input[name="modal"]:checked').value;
+                var embarque = document.getElementById('embarque').value;
+                var destino = document.getElementById('destino').value;
+                var valor = document.getElementById('valor').value;
+            
+                //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional 
+                if (desembaraco == "Pernambuco"){
+                    if (di_duimp == 1){
+                        var Ger_Log_Importacao = 4 * 1412;
+                    } else if (di_duimp > 1  <= 5){
+                        var Ger_Log_Importacao = 0.9 * 1412 * di_duimp;
+                    } else if (di_duimp > 5  <= 10){
+                        var Ger_Log_Importacao = 0.8 * 1412 * di_duimp;
+                    } else if (di_duimp > 10  <= 15){
+                        var Ger_Log_Importacao = 0.7 * 1412 * di_duimp;
+                    } else if (di_duimp > 15){
+                        var Ger_Log_Importacao = 0.6 * 1412 * di_duimp;
+                    }
+
+                }else{
+                    if (di_duimp == 1){
+                        var Ger_Log_Importacao = 5 * 1412;
+                        alert (Ger_Log_Importacao);
+                    } else if (di_duimp > 1  <= 5){
+                        var Ger_Log_Importacao = 0.95 * 1412 * di_duimp;
+                        alert (Ger_Log_Importacao);
+                    } else if (di_duimp > 5  <= 10){
+                        var Ger_Log_Importacao = 0.85 * 1412 * di_duimp;
+                    } else if (di_duimp > 10  <= 15){
+                        var Ger_Log_Importacao = 0.75 * 1412 * di_duimp;
+                    } else if (di_duimp > 15){
+                        var Ger_Log_Importacao = 0.65 * 1412 * di_duimp;
+                    } 
+                }
+
+
+                var data = {
+                    descricao : descricao,
+                    classificacao : classificacao,
+                    ii: ii,
+                    pis: pis,
+                    ipi: ipi,
+                    cofins: cofins,
+                    icms: icms,
+                    peso: peso,
+                    quantidade: quantidade,
+                    incoterm : incoterm,
+                    lis : lis,
+                    li_lcpo : li_lcpo,
+                    di_duimp : di_duimp,
+                    desembaraco : desembaraco,
+                    acondicionamento: acondicionamento,
+                    acondicionamentocontainer: acondicionamentocontainer,
+                    modal: modal,
+                    embarque : embarque,
+                    destino: destino,
+                    valor: valor,
+                    Ger_Log_Importacao : Ger_Log_Importacao
+                };
+        
+                    $.ajax({
+                    url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
         }
+            
+        }
+        main
     </script>
 </body>
 
