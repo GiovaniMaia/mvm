@@ -305,7 +305,7 @@
                 <input type="text" class="form-control" id="taxa-dolar" readonly>
             </div>
 
-            <button type="button" id="enviar-formulario" class="btn btn-primary">Enviar</button>
+            <button type="button" id="enviar-formulario" class="btn btn-primary" onclick="converter()">Enviar</button>
         </form>
     </div>
 
@@ -408,6 +408,13 @@
 
         // Chamada à função para buscar a taxa de câmbio quando a página carrega
         window.addEventListener('load', getExchangeRate);
+
+        function converter(){
+            var form = document.querySelector("form");
+            form.addEventListener("submit",function(evento){
+              evento.preventDefault();
+            })
+        }
     </script>
 </body>
 
