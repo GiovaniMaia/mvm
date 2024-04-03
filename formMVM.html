@@ -93,7 +93,33 @@
         <input type="number" class="form-control" id="quantidade" min="0" required>
       </div>
 
-      <!-- ... (demais campos) -->
+      <div class="form-group">
+        <label for="incoterm">INCOTERM:</label>
+        <input type="text" class="form-control" id="incoterm" required>
+      </div>
+
+      <div class="form-group">
+        <label for="lis">Nº ESTIMADO DE L.I.´s:</label>
+        <input type="number" class="form-control" id="lis" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label for="li_lcpo">Nº ESTIMADO DE ADIÇÕES À L.I.-LCPO</label>
+        <input type="number" class="form-control" id="li_lcpo" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label for="di_duimp">Nº ESTIMADO DE ADIÇÕES À DI-DUIMP</label>
+        <input type="number" class="form-control" id="di_duimp" min="0" required>
+      </div>
+
+      <div class="form-group">
+        <label for="desembaraco">Local do desembaraço aduaneiro</label>
+        <select class="form-control" name="desembaraco" id="desembaraco">
+          <option value="Pernambuco">Pernambuco</option>
+          <option value="Outro Estado">Outro Estado</option>
+        </select>
+      </div>
 
       <!-- Tipo de Acondicionamento -->
       <div class="form-group">
@@ -101,9 +127,26 @@
         <select class="form-control" id="acondicionamento">
           <option value="">Selecione...</option>
           <option value="sacaria">Sacaria</option>
-          <!-- ... (demais opções) -->
+          <option value="Caixa de Madeira">Caixa de Madeira</option>
+          <option value="Caixa de Papelão">Caixa de Papelão</option>
+          <option value="Tambores de Metal">Tambores de Metal</option>
+          <option value="Tambores plásticos">Tambores plásticos</option>
+          <option value="Pallets">Pallets</option>
+          <option value="IBC-Intermediate Bulk Container">IBC-Intermediate Bulk Container</option>
           <option value="containers">Containers</option>
         </select>
+      </div>
+
+      <div class="divacondicionamentocontainer"> 
+        <div class="form-group">
+          <label for="acondicionamentocontainer">Seleciona o tipo de carga</label>
+          <select class="form-control" id="acondicionamentocontainer">
+            <option value="">Selecione...</option>
+            <option value="cargas gerais">cargas gerais (cargas secas, como autopeças, maquinários, móveis e roupas);</option>
+            <option value="cargas refrigeradas">cargas refrigeradas (transportadas em containers reefers, como carne, frango e vacinas);</option>
+            <option value="cargas químicas"> cargas químicas ( produtos corrosivos, inflamáveis e explosivos – controlados pela Polícia Civil, Polícia Federal, Exército e Ibama. Medicamentos/cosméticos – controlados pela ANVISA).</option>
+          </select>
+        </div>
       </div>
 
       <!-- Tipo de Container (se Containers for selecionado) -->
@@ -206,6 +249,19 @@
       } else {
         containerSection.style.display = 'none';
       }
+    });
+
+    const acondicionamentoContainer = document.getElementById('divacondicionamentocontainer');
+
+    acondicionamentoSelect.addEventListener('change', function() {
+        // Verifique se o valor selecionado é "containers"
+        if (acondicionamentoSelect.value === 'containers') {
+            // Se for "containers", mostre o campo "acondicionamentocontainer"
+            acondicionamentoContainer.style.display = 'block';
+        } else {
+            // Caso contrário, esconda-o
+            acondicionamentoContainer.style.display = 'none';
+        }
     });
 
     // Contador de containers
