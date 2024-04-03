@@ -437,7 +437,32 @@
                 var embarque = document.getElementById('embarque').value;
                 var destino = document.getElementById('destino').value;
                 var valor = document.getElementById('valor').value;
-            
+
+                var container20Value = container20.checked ? container20.value : null;
+                var quantity20Value = container20.checked ? parseInt(quantity20.value) : 0;
+                var container40Value = container40.checked ? container40.value : null;
+                var quantity40Value = container40.checked ? parseInt(quantity40.value) : 0;
+                var containerHighCube40Value = containerHighCube40.checked ? containerHighCube40.value : null;
+                var quantityHighCube40Value = containerHighCube40.checked ? parseInt(quantityHighCube40.value) : 0;
+                var GraneleiroDry20Value = GraneleiroDry20.checked ? GraneleiroDry20.value : null;
+                var quantityGraneleiroDry20Value = GraneleiroDry20.checked ? parseInt(quantityGraneleiroDry20.value) : 0;
+                var FlatRack20Value = FlatRack20.checked ? FlatRack20.value : null;
+                var quantityFlatRack20Value = FlatRack20.checked ? parseInt(quantityFlatRack20.value) : 0;
+                var FlatRack40Value = FlatRack40.checked ? FlatRack40.value : null;
+                var quantityFlatRack40Value = FlatRack40.checked ? parseInt(quantityFlatRack40.value) : 0;
+                var ContainerTanqueValue = ContainerTanque.checked ? ContainerTanque.value : null;
+                var quantityContainerTanqueValue = ContainerTanque.checked ? parseInt(quantityContainerTanque.value) : 0;
+                var ContainerVentiladoValue = ContainerVentilado.checked ? ContainerVentilado.value : null;
+                var quantityContainerVentiladoValue = ContainerVentilado.checked ? parseInt(quantityContainerVentilado.value) : 0;
+                var OpenTop20Value = OpenTop20.checked ? OpenTop20.value : null;
+                var quantityOpenTop20Value = OpenTop20.checked ? parseInt(quantityOpenTop20.value) : 0;
+                var OpenTop40Value = OpenTop40.checked ? OpenTop40.value : null;
+                var quantityOpenTop40Value = OpenTop40.checked ? parseInt(quantityOpenTop40.value) : 0;
+                var Refrigerado20Value = Refrigerado20.checked ? Refrigerado20.value : null;
+                var quantityRefrigerado20Value = Refrigerado20.checked ? parseInt(quantityRefrigerado20.value) : 0;
+                var Refrigerado40Value = Refrigerado40.checked ? Refrigerado40.value : null;
+                var quantityRefrigerado40Value = Refrigerado40.checked ? parseInt(quantityRefrigerado40.value) : 0;
+                    
                 //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional 
                 if (desembaraco == "Pernambuco"){
                     if (di_duimp == 1){
@@ -468,6 +493,28 @@
                     } 
                 }
 
+                //frete internacional maritimo
+                var totalcontainer = quantity20Value + quantity40Value + quantityHighCube40Value + quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityFlatRack40Value + quantityContainerTanqueValue + quantityContainerVentiladoValue + quantityOpenTop20Value + quantityOpenTop40Value + quantityRefrigerado20Value + quantityRefrigerado40Value;
+
+                //Seguro Internacional Marítimo/Aéreo
+                var segurointernacional = (0.2 * valor)/100;
+
+                //Taxa do Siscomex
+                if (di_duimp > 0 && di_duimp <= 2) {
+                    var taxasiscomex = 38.56;
+                } else if (di_duimp > 2 && di_duimp <= 5) {
+                    var taxasiscomex = 30.85;
+                } else if (di_duimp > 5 && di_duimp <= 10) {
+                    var taxasiscomex = 23.14;
+                } else if (di_duimp > 10 && di_duimp <= 20) {
+                    var taxasiscomex = 15.42;
+                } else if (di_duimp > 20 && di_duimp <= 50) {
+                    var taxasiscomex = 7.71;
+                } else if (di_duimp > 50) {
+                    var taxasiscomex = 3.86;
+                } else {
+                    alert("erro taxa siscomex");
+                }
 
                 var data = {
                     descricao : descricao,
@@ -490,7 +537,33 @@
                     embarque : embarque,
                     destino: destino,
                     valor: valor,
-                    Ger_Log_Importacao : Ger_Log_Importacao
+                    Ger_Log_Importacao : Ger_Log_Importacao,
+                    container20: container20Value,
+                    quantity20: quantity20Value,
+                    container40: container40Value,
+                    quantity40: quantity40Value,
+                    containerHighCube40: containerHighCube40Value,
+                    quantityHighCube40: quantityHighCube40Value,
+                    GraneleiroDry20: GraneleiroDry20Value,
+                    quantityGraneleiroDry20: quantityGraneleiroDry20Value,
+                    FlatRack20: FlatRack20Value,
+                    quantityFlatRack20: quantityFlatRack20Value,
+                    FlatRack40: FlatRack40Value,
+                    quantityFlatRack40: quantityFlatRack40Value,
+                    ContainerTanque: ContainerTanqueValue,
+                    quantityContainerTanque: quantityContainerTanqueValue,
+                    ContainerVentilado: ContainerVentiladoValue,
+                    quantityContainerVentilado: quantityContainerVentiladoValue,
+                    OpenTop20: OpenTop20Value,
+                    quantityOpenTop20: quantityOpenTop20Value,
+                    OpenTop40: OpenTop40Value,
+                    quantityOpenTop40: quantityOpenTop40Value,
+                    Refrigerado20: Refrigerado20Value,
+                    quantityRefrigerado20: quantityRefrigerado20Value,
+                    Refrigerado40: Refrigerado40Value,
+                    quantityRefrigerado40: quantityRefrigerado40Value,
+                    totalcontainer : totalcontainer,
+                    taxasiscomex : taxasiscomex
                 };
         
                     $.ajax({
