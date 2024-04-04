@@ -223,20 +223,6 @@
                         placeholder="Digita aqui a quantidade de Containers">
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="container" id="ContainerTanque"
-                        value="Container Tanque" onchange="updateContainerQuantity('ContainerTanque')">
-                    <label class="form-check-label" for="ContainerTanque">Container Tanque</label>
-                    <input type="number" class="form-control" id="quantityContainerTanque" min="0" style="display:none;"
-                        placeholder="Digita aqui a quantidade de Containers">
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="container" id="ContainerVentilado"
-                        value="Container Ventilado" onchange="updateContainerQuantity('ContainerVentilado')">
-                    <label class="form-check-label" for="ContainerVentilado">Container Ventilado</label>
-                    <input type="number" class="form-control" id="quantityContainerVentilado" min="0"
-                        style="display:none;" placeholder="Digita aqui a quantidade de Containers">
-                </div>
-                <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="container" id="OpenTop20" value="Open Top 20"
                         onchange="updateContainerQuantity('OpenTop20')">
                     <label class="form-check-label" for="OpenTop20">Open Top 20’</label>
@@ -295,6 +281,19 @@
                 <label>Taxa do Dólar (Atualizada):</label>
                 <input type="text" class="form-control" id="taxa-dolar" readonly>
             </div>
+
+            <div class="form-group">
+                    <label for="continenteorigem">Seleciona o Continente/origem do Embarque</label>
+                    <select class="form-control" id="continenteorigem">
+                        <option value="">Selecione...</option>
+                        <option value="Americano-USA">Americano-USA</option>
+                        <option value="Europeu-Reino Unido">Europeu-Reino Unido</option>
+                        <option value="Asiático-China">Asiático-China</option>
+                        <option value="Africano-África do Sul">Africano-África do Sul</option>
+                        <option value="Oceania-Austrália">Oceania-Austrália</option>
+                        <option value="Oriente Médio-Arábia Saudita">Oriente Médio-Arábia Saudita</option>
+                    </select>
+                </div>
 
             <button type="button" id="enviar-formulario" class="btn btn-primary" onclick="converter()">Enviar</button>
         </form>
@@ -389,7 +388,6 @@
                 })
                 .then(data => {
                     // Aqui você pode acessar os dados da taxa de câmbio e usá-los conforme necessário
-                    console.log('Dados da taxa de câmbio:', data);
                     const exchangeRate = data.conversion_rates.BRL;
                     const formattedExchangeRate = exchangeRate.toFixed(2); // Formata para ter apenas dois números após o ponto decimal
                     document.getElementById('taxa-dolar').value = `R$ ${formattedExchangeRate}`;
@@ -428,6 +426,10 @@
                 var embarque = document.getElementById('embarque').value;
                 var destino = document.getElementById('destino').value;
                 var valor = document.getElementById('valor').value;
+                var continenteorigem = document.getElementById('continenteorigem').value;
+                var taxadolarComSimbolo = document.getElementById('taxa-dolar').value;
+                var taxadolarSemSimbolo = taxadolarComSimbolo.replace('R$', '').trim(); // Remove "R$" e espaços em branco
+                var taxadolar = parseFloat(taxadolarSemSimbolo);
 
                 var container20Value = container20.checked ? container20.value : null;
                 var quantity20Value = container20.checked ? parseInt(quantity20.value) : 0;
@@ -441,10 +443,6 @@
                 var quantityFlatRack20Value = FlatRack20.checked ? parseInt(quantityFlatRack20.value) : 0;
                 var FlatRack40Value = FlatRack40.checked ? FlatRack40.value : null;
                 var quantityFlatRack40Value = FlatRack40.checked ? parseInt(quantityFlatRack40.value) : 0;
-                var ContainerTanqueValue = ContainerTanque.checked ? ContainerTanque.value : null;
-                var quantityContainerTanqueValue = ContainerTanque.checked ? parseInt(quantityContainerTanque.value) : 0;
-                var ContainerVentiladoValue = ContainerVentilado.checked ? ContainerVentilado.value : null;
-                var quantityContainerVentiladoValue = ContainerVentilado.checked ? parseInt(quantityContainerVentilado.value) : 0;
                 var OpenTop20Value = OpenTop20.checked ? OpenTop20.value : null;
                 var quantityOpenTop20Value = OpenTop20.checked ? parseInt(quantityOpenTop20.value) : 0;
                 var OpenTop40Value = OpenTop40.checked ? OpenTop40.value : null;
@@ -484,9 +482,6 @@
                     } 
                 }
 
-                //frete internacional maritimo teste 123
-                var totalcontainer = quantity20Value + quantity40Value + quantityHighCube40Value + quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityFlatRack40Value + quantityContainerTanqueValue + quantityContainerVentiladoValue + quantityOpenTop20Value + quantityOpenTop40Value + quantityRefrigerado20Value + quantityRefrigerado40Value;
-
                 //Seguro Internacional Marítimo/Aéreo
                 var segurointernacional = (0.2 * valor)/100;
 
@@ -515,6 +510,7 @@
                 var cofinsNum = parseFloat(cofins); // COFINS
                 var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
                 var icmsNum = parseFloat(icms); // Alíquota de ICMS
+                var valorNum = parseFloat(valor); // valor da mercadoria
 
                 // Realizando o cálculo do ICMS
                 var calculoicms = iiNum + ipiNum + pisNum + cofinsNum + taxasiscomexNum;
@@ -525,6 +521,176 @@
 
                 //Taxa do Sindicato de Despachantes Aduaneiros-Opcional
                 var taxaSindicatoAduaneiro = 291.40
+
+                //variaveis das caixas
+                function obterValoresCaixa() {
+                    const valoresCaixas = [];
+                    const numCaixasInput = document.getElementById('num-caixas');
+                    const caixasSection = document.getElementById('caixas-section');
+                    const numCaixas = parseInt(numCaixasInput.value);
+                    for (let i = 1; i <= numCaixas; i++) {
+                        const altura = parseFloat(document.getElementById(`altura-${i}`).value);
+                        const largura = parseFloat(document.getElementById(`largura-${i}`).value);
+                        const comprimento = parseFloat(document.getElementById(`comprimento-${i}`).value);
+        
+                        // Calcular metragem cúbica
+                        const metragemCubica = altura * largura * comprimento;
+        
+                        valoresCaixas.push({ altura, largura, comprimento, metragemCubica });
+                    }
+                    return valoresCaixas;
+                }
+        
+                // Função para somar todas as metragens cúbicas das caixas
+                function somarMetragensCubicas(caixas) {
+                    let soma = 0;
+                    for (let caixa of caixas) {
+                        soma += caixa.metragemCubica;
+                    }
+                    return soma;
+                }
+        
+                // Atualiza os valores das caixas antes de realizar a conversão
+                const valoresCaixas = obterValoresCaixa();
+        
+                // Soma todas as metragens cúbicas das caixas
+                const somaMetragensCubicas = somarMetragensCubicas(valoresCaixas);
+                
+                //frete internacional
+                //verifica se é modal Maritimo ou Aereo
+                if(modal == 'maritimo'){
+                    
+                    //frete internacional maritimo
+                    var totalcontainer = quantity20Value + quantity40Value + quantityHighCube40Value + quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityFlatRack40Value + quantityOpenTop20Value + quantityOpenTop40Value + quantityRefrigerado20Value + quantityRefrigerado40Value;
+
+                    var totalcontainer20 = quantity20Value +  quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityOpenTop20Value + quantityRefrigerado20Value;
+                    var totalcontainer40 = quantity40Value + quantityHighCube40Value + quantityFlatRack40Value + quantityOpenTop40Value + quantityRefrigerado40Value;
+
+                    //se container20 for selecionado
+                    if (totalcontainer20 > 0){
+
+                        if(continenteorigem == 'Americano-USA'){
+                            var vunitab20 = totalcontainer20 * (1297.00 * taxadolar);
+                        }else if (continenteorigem == 'Europeu-Reino Unido'){
+                            var vunitab20 =  totalcontainer20 * (1122.00 * taxadolar);
+                        }else if (continenteorigem == 'Asiático-China'){
+                            var vunitab20 = totalcontainer20 * (4094.00 * taxadolar);
+                        }else if (continenteorigem == 'Africano-África do Sul'){
+                            var vunitab20 = totalcontainer20 * (882.00 * taxadolar);
+                        }else if (continenteorigem == 'Oceania-Austrália'){
+                            var vunitab20 = totalcontainer20 * (3034.00 * taxadolar);
+                        }else if (continenteorigem == 'Oriente Médio-Arábia Saudita'){
+                            var vunitab20 = totalcontainer20 * (3047.00 * taxadolar);
+                        }
+                    } 
+                    //se container40 for selecionado
+                    if(totalcontainer40 > 0){
+                        if(continenteorigem == 'Americano-USA'){
+                            var vunitab40 = totalcontainer40 * (1383.00 * taxadolar);
+                        }else if (continenteorigem == 'Europeu-Reino Unido'){
+                            var vunitab40 =  totalcontainer40 * (1334.00 * taxadolar);
+                        }else if (continenteorigem == 'Asiático-China'){
+                            var vunitab40 = totalcontainer40 * (4422.00 * taxadolar);
+                        }else if (continenteorigem == 'Africano-África do Sul'){
+                            var vunitab40 = totalcontainer40 * (941.00 * taxadolar);
+                        }else if (continenteorigem == 'Oceania-Austrália'){
+                            var vunitab40 = totalcontainer40 * (5253.00 * taxadolar);
+                        }else if (continenteorigem == 'Oriente Médio-Arábia Saudita'){
+                            var vunitab40 = totalcontainer40 * (4362.00 * taxadolar);
+                        }
+                    }
+                    //total valor unitario em R$
+                    var freteinternacionalmaritimo = vunitab20 + vunitab40
+                    //Imposto de Importação-I.I.
+                    var impostoimpII = (valorNum + freteinternacionalmaritimo + segurointernacional) * iiNum;
+
+                    //Imposto de Produtos Industrializados-I.P.I.
+                    var impostoProdIndIPI = (valorNum + impostoimpII)*ipiNum;
+
+                    //PIS/PASEP-Programa de Integração Social
+                    var PIS_PASEP = (valorNum + freteinternacionalmaritimo + segurointernacional) * pisNum;
+
+                    //COFINS-Contribuição para Financiamento da Seguridade Social
+                    var valorCOFINS = (valorNum + freteinternacionalmaritimo + segurointernacional) * cofinsNum;
+
+                    //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
+                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum
+
+                    console.log(valorICMS);
+                    console.log(impostoimpII);
+                    console.log(impostoProdIndIPI);
+                    console.log(PIS_PASEP);
+                    console.log(valorCOFINS);
+                    console.log(taxasiscomexNum);
+                    console.log(icmsNum);
+
+                }else if (modal == 'aereo'){
+                    if(continenteorigem == 'Americano-USA'){
+                       var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
+                       
+                       if (freteinternacionalaereo < (3082.94*taxadolar)){
+                        var freteinternacionalaereo = 3082.94;
+                       }
+                    }else if(continenteorigem == 'Europeu-Reino Unido'){
+                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
+                        
+                        if (freteinternacionalaereo < (3082.94*taxadolar)){
+                         var freteinternacionalaereo = 3082.94;
+                        }
+                    }else if(continenteorigem == 'Asiático-China'){
+                        var freteinternacionalaereo = somaMetragensCubicas * (22 * taxadolar);
+                        
+                        if (freteinternacionalaereo < (3082.94*taxadolar)){
+                         var freteinternacionalaereo = 3082.94;
+                        }
+                    }else if(continenteorigem == 'Africano-África do Sul'){
+                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
+                        
+                        if (freteinternacionalaereo < (3082.94*taxadolar)){
+                         var freteinternacionalaereo = 3082.94;
+                        }
+                    }else if(continenteorigem == 'Oceania-Austrália'){
+                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
+                        
+                        if (freteinternacionalaereo < (3082.94*taxadolar)){
+                         var freteinternacionalaereo = 3082.94;
+                        }
+                    }else if(continenteorigem == 'Oriente Médio-Arábia Saudita'){
+                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
+                        
+                        if (freteinternacionalaereo < (3082.94*taxadolar)){
+                         var freteinternacionalaereo = 3082.94;
+                        }
+                    }
+
+                    //Imposto de Importação-I.I.
+                    var impostoimpII = (valorNum + freteinternacionalaereo + segurointernacional) * iiNum;
+
+                    //Imposto de Produtos Industrializados-I.P.I.
+                    var impostoProdIndIPI = (valorNum + impostoimpII)*ipiNum;
+
+                    //PIS/PASEP-Programa de Integração Social
+                    var PIS_PASEP = (valorNum + freteinternacionalaereo + segurointernacional) * pisNum;
+
+                    //COFINS-Contribuição para Financiamento da Seguridade Social
+                    var valorCOFINS = (valorNum + freteinternacionalaereo + segurointernacional) * cofinsNum;
+
+                    //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
+                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum
+
+                    console.log(valorICMS);
+                    console.log(impostoimpII);
+                    console.log(impostoProdIndIPI);
+                    console.log(PIS_PASEP);
+                    console.log(valorCOFINS);
+                    console.log(taxasiscomexNum);
+                    console.log(icmsNum);
+                    
+                }
+
+
+                
+                
                 
                 var data = {
                     descricao : descricao,
@@ -560,10 +726,6 @@
                     quantityFlatRack20: quantityFlatRack20Value,
                     FlatRack40: FlatRack40Value,
                     quantityFlatRack40: quantityFlatRack40Value,
-                    ContainerTanque: ContainerTanqueValue,
-                    quantityContainerTanque: quantityContainerTanqueValue,
-                    ContainerVentilado: ContainerVentiladoValue,
-                    quantityContainerVentilado: quantityContainerVentiladoValue,
                     OpenTop20: OpenTop20Value,
                     quantityOpenTop20: quantityOpenTop20Value,
                     OpenTop40: OpenTop40Value,
@@ -576,7 +738,15 @@
                     taxasiscomex : taxasiscomex,
                     taxaicms: taxaicms,
                     taxaDesconsolidacaoblawb: taxaDesconsolidacaoblawb,
-                    taxaSindicatoAduaneiro: taxaSindicatoAduaneiro
+                    taxaSindicatoAduaneiro: taxaSindicatoAduaneiro,
+                    freteinternacionalmaritimo:freteinternacionalmaritimo,
+                    freteinternacionalaereo:freteinternacionalaereo,
+                    freteinternacionalmaritimo40:vunitab40,
+                    freteinternacionalmaritimo20:vunitab20,
+                    impostoimpII:impostoimpII,
+                    impostoProdIndIPI:impostoProdIndIPI,
+                    PIS_PASEP:PIS_PASEP,
+                    valorCOFINS:valorCOFINS
                 };
         
                     $.ajax({
