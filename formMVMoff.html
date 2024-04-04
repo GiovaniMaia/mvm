@@ -287,15 +287,6 @@
             </div>
 
             <div class="form-group">
-                <label for="desembaraco">LOCAL DO DESEMBARAÇO ADUANEIRO</label>
-                <select class="form-control" id="desembaraco">
-                    <option value="">Selecione...</option>
-                    <option value="pernambuco">Pernambuco</option>
-                    <option value="outro">Outros</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label for="valor">Valor da Mercadoria:</label>
                 <input type="number" class="form-control" id="valor" min="0" required>
             </div>
@@ -515,7 +506,26 @@
                 } else {
                     alert("erro taxa siscomex");
                 }
+                //Taxa ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
 
+                // Convertendo as variáveis para números
+                var iiNum = parseFloat(ii); // Imposto de Importação
+                var ipiNum = parseFloat(ipi); // IPI
+                var pisNum = parseFloat(pis); // PIS
+                var cofinsNum = parseFloat(cofins); // COFINS
+                var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
+                var icmsNum = parseFloat(icms); // Alíquota de ICMS
+
+                // Realizando o cálculo do ICMS
+                var calculoicms = iiNum + ipiNum + pisNum + cofinsNum + taxasiscomexNum;
+                var taxaicms = calculoicms * icmsNum;
+
+                // Taxa Taxa de Desconsolidação de B/L/AWB
+                var taxaDesconsolidacaoblawb = 50.00
+
+                //Taxa do Sindicato de Despachantes Aduaneiros-Opcional
+                var taxaSindicatoAduaneiro = 291.40
+                
                 var data = {
                     descricao : descricao,
                     classificacao : classificacao,
@@ -563,7 +573,10 @@
                     Refrigerado40: Refrigerado40Value,
                     quantityRefrigerado40: quantityRefrigerado40Value,
                     totalcontainer : totalcontainer,
-                    taxasiscomex : taxasiscomex
+                    taxasiscomex : taxasiscomex,
+                    taxaicms: taxaicms,
+                    taxaDesconsolidacaoblawb: taxaDesconsolidacaoblawb,
+                    taxaSindicatoAduaneiro: taxaSindicatoAduaneiro
                 };
         
                     $.ajax({
