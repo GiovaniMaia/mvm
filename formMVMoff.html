@@ -299,7 +299,7 @@
         </form>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
     <script>
@@ -431,6 +431,17 @@
                 var taxadolarSemSimbolo = taxadolarComSimbolo.replace('R$', '').trim(); // Remove "R$" e espaços em branco
                 var taxadolar = parseFloat(taxadolarSemSimbolo);
 
+                // Convertendo as variáveis para números
+                var iiNum = parseFloat(ii); // Imposto de Importação
+                var ipiNum = parseFloat(ipi); // IPI
+                var pisNum = parseFloat(pis); // PIS
+                var cofinsNum = parseFloat(cofins); // COFINS
+                var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
+                var icmsNum = parseFloat(icms); // Alíquota de ICMS
+                var valorNum = parseFloat(valor); // valor da mercadoria
+                var lisNum = parseInt(lis); // N estimado de LI
+                var li_lcpoNum = parseInt(li_lcpo); // N estimado de add LIs
+
                 var container20Value = container20.checked ? container20.value : null;
                 var quantity20Value = container20.checked ? parseInt(quantity20.value) : 0;
                 var container40Value = container40.checked ? container40.value : null;
@@ -452,8 +463,9 @@
                 var Refrigerado40Value = Refrigerado40.checked ? Refrigerado40.value : null;
                 var quantityRefrigerado40Value = Refrigerado40.checked ? parseInt(quantityRefrigerado40.value) : 0;
                     
-                //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional 
+                //verifica se o desembaraco é pe             
                 if (desembaraco == "Pernambuco"){
+                    //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
                     if (di_duimp == 1){
                         var Ger_Log_Importacao = 4 * 1412;
                     } else if (di_duimp > 1  <= 5){
@@ -466,7 +478,21 @@
                         var Ger_Log_Importacao = 0.6 * 1412 * di_duimp;
                     }
 
+                    //Desembaraço Aduaneiro/DUIMP
+                    if(valorNum * taxadolar <= 100000){
+                        var taxaduimp = 1412*3;
+                    }else if(valorNum * taxadolar > 100000 && valorNum * taxadolar <= 300000){
+                        var taxaduimp = (0.5 * valorNum) + (2 * 1412);
+                    }else if(valorNum * taxadolar > 300000 && valorNum * taxadolar <= 500000){
+                        var taxaduimp = (0.4 * valorNum) + (3 * 1412);
+                    }else if(valorNum * taxadolar > 500000 && valorNum * taxadolar <= 700000){
+                        var taxaduimp = (0.3 * valorNum) + (3.5 * 1412);
+                    }else if(valorNum * taxadolar > 700000){
+                        var taxaduimp = (0.2 * valorNum) + (4 * 1412);
+                    }
+
                 }else{
+                    //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
                     if (di_duimp == 1){
                         var Ger_Log_Importacao = 5 * 1412;
                         alert (Ger_Log_Importacao);
@@ -480,6 +506,20 @@
                     } else if (di_duimp > 15){
                         var Ger_Log_Importacao = 0.65 * 1412 * di_duimp;
                     } 
+
+                    //Desembaraço Aduaneiro/DUIMP
+                    if(valorNum * taxadolar <= 100000){
+                        var taxaduimp = 1412*4;
+                    }else if(valorNum * taxadolar > 100000 && valorNum * taxadolar <= 300000){
+                        var taxaduimp = (0.5 * valorNum) + (3 * 1412);
+                    }else if(valorNum * taxadolar > 300000 && valorNum * taxadolar <= 500000){
+                        var taxaduimp = (0.4 * valorNum) + (4 * 1412);
+                    }else if(valorNum * taxadolar > 500000 && valorNum * taxadolar <= 700000){
+                        var taxaduimp = (0.3 * valorNum) + (4.5 * 1412);
+                    }else if(valorNum * taxadolar > 700000){
+                        var taxaduimp = (0.2 * valorNum) + (5 * 1412);
+                    }
+
                 }
 
                 //Seguro Internacional Marítimo/Aéreo
@@ -503,14 +543,7 @@
                 }
                 //Taxa ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
 
-                // Convertendo as variáveis para números
-                var iiNum = parseFloat(ii); // Imposto de Importação
-                var ipiNum = parseFloat(ipi); // IPI
-                var pisNum = parseFloat(pis); // PIS
-                var cofinsNum = parseFloat(cofins); // COFINS
-                var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
-                var icmsNum = parseFloat(icms); // Alíquota de ICMS
-                var valorNum = parseFloat(valor); // valor da mercadoria
+                
 
                 // Realizando o cálculo do ICMS
                 var calculoicms = iiNum + ipiNum + pisNum + cofinsNum + taxasiscomexNum;
@@ -614,15 +647,7 @@
                     var valorCOFINS = (valorNum + freteinternacionalmaritimo + segurointernacional) * cofinsNum;
 
                     //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum
-
-                    console.log(valorICMS);
-                    console.log(impostoimpII);
-                    console.log(impostoProdIndIPI);
-                    console.log(PIS_PASEP);
-                    console.log(valorCOFINS);
-                    console.log(taxasiscomexNum);
-                    console.log(icmsNum);
+                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum;
 
                 }else if (modal == 'aereo'){
                     if(continenteorigem == 'Americano-USA'){
@@ -676,20 +701,24 @@
                     var valorCOFINS = (valorNum + freteinternacionalaereo + segurointernacional) * cofinsNum;
 
                     //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum
-
-                    console.log(valorICMS);
-                    console.log(impostoimpII);
-                    console.log(impostoProdIndIPI);
-                    console.log(PIS_PASEP);
-                    console.log(valorCOFINS);
-                    console.log(taxasiscomexNum);
-                    console.log(icmsNum);
-                    
+                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum;
                 }
 
-
-                
+                // Taxa Administrativa de Emissão de Licença de Importação
+                var ValorLI = lisNum * 200
+                if(li_lcpoNum <= 2){
+                    var taxaLI = (50 * li_lcpoNum ) + ValorLI;
+                }else if(li_lcpoNum > 2 <= 5 ){
+                    var taxaLI = (40 * li_lcpoNum ) + ValorLI;
+                }else if(li_lcpoNum > 5 <= 10 ){
+                    var taxaLI = (30 * li_lcpoNum ) + ValorLI;
+                }else if(li_lcpoNum > 10 <= 20 ){
+                    var taxaLI = (20 * li_lcpoNum ) + ValorLI;
+                }else if(li_lcpoNum > 20 <= 50 ){
+                    var taxaLI = (10 * li_lcpoNum ) + ValorLI;
+                }else if(li_lcpoNum > 50 ){
+                    var taxaLI = (5 * li_lcpoNum ) + ValorLI;
+                }               
                 
                 
                 var data = {
@@ -714,26 +743,26 @@
                     destino: destino,
                     valor: valor,
                     Ger_Log_Importacao : Ger_Log_Importacao,
-                    container20: container20Value,
-                    quantity20: quantity20Value,
-                    container40: container40Value,
-                    quantity40: quantity40Value,
-                    containerHighCube40: containerHighCube40Value,
-                    quantityHighCube40: quantityHighCube40Value,
-                    GraneleiroDry20: GraneleiroDry20Value,
-                    quantityGraneleiroDry20: quantityGraneleiroDry20Value,
-                    FlatRack20: FlatRack20Value,
-                    quantityFlatRack20: quantityFlatRack20Value,
-                    FlatRack40: FlatRack40Value,
-                    quantityFlatRack40: quantityFlatRack40Value,
-                    OpenTop20: OpenTop20Value,
-                    quantityOpenTop20: quantityOpenTop20Value,
-                    OpenTop40: OpenTop40Value,
-                    quantityOpenTop40: quantityOpenTop40Value,
-                    Refrigerado20: Refrigerado20Value,
-                    quantityRefrigerado20: quantityRefrigerado20Value,
-                    Refrigerado40: Refrigerado40Value,
-                    quantityRefrigerado40: quantityRefrigerado40Value,
+                    container20Value: container20Value,
+                    quantity20Value: quantity20Value,
+                    container40Value: container40Value,
+                    quantity40Value: quantity40Value,
+                    containerHighCube40Value: containerHighCube40Value,
+                    quantityHighCube40Value: quantityHighCube40Value,
+                    GraneleiroDry20Value: GraneleiroDry20Value,
+                    quantityGraneleiroDry20Value: quantityGraneleiroDry20Value,
+                    FlatRack20Value: FlatRack20Value,
+                    quantityFlatRack20Value: quantityFlatRack20Value,
+                    FlatRack40Value: FlatRack40Value,
+                    quantityFlatRack40Value: quantityFlatRack40Value,
+                    OpenTop20Value: OpenTop20Value,
+                    quantityOpenTop20Value: quantityOpenTop20Value,
+                    OpenTop40Value: OpenTop40Value,
+                    quantityOpenTop40Value: quantityOpenTop40Value,
+                    Refrigerado20Value: Refrigerado20Value,
+                    quantityRefrigerado20Value: quantityRefrigerado20Value,
+                    Refrigerado40Value: Refrigerado40Value,
+                    quantityRefrigerado40Value: quantityRefrigerado40Value,
                     totalcontainer : totalcontainer,
                     taxasiscomex : taxasiscomex,
                     taxaicms: taxaicms,
@@ -747,11 +776,14 @@
                     impostoProdIndIPI:impostoProdIndIPI,
                     PIS_PASEP:PIS_PASEP,
                     valorCOFINS:valorCOFINS,
-                    valorICMS:valorICMS
+                    valorICMS:valorICMS,
+                    ValorLI: ValorLI,
+                    taxaLI:taxaLI,
+                    taxaduimp:taxaduimp
                 };
         
                     $.ajax({
-                    url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm',
+                    url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm-2',
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
