@@ -7,6 +7,8 @@
     <title>Formulário de Exportação</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
@@ -37,6 +39,25 @@
             height: 100%;
             margin: 0 10px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+          }
+        
+          th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+          }
+        
+          th {
+            background-color: #f2f2f2;
+          }
+        
+          td {
+            background-color: #fff;
+          }
     </style>
 </head>
 
@@ -297,7 +318,25 @@
 
             <button type="button" id="enviar-formulario" class="btn btn-primary" onclick="converter()">Enviar</button>
         </form>
-    </div>
+
+        <div class="modal fade" id="resultado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Valores das Variáveis</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Aqui serão exibidos os valores das variáveis -->
+                        <div id="modal-body-content"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -436,7 +475,6 @@
                 var ipiNum = parseFloat(ipi); // IPI
                 var pisNum = parseFloat(pis); // PIS
                 var cofinsNum = parseFloat(cofins); // COFINS
-                var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
                 var icmsNum = parseFloat(icms); // Alíquota de ICMS
                 var valorNum = parseFloat(valor); // valor da mercadoria
                 var lisNum = parseInt(lis); // N estimado de LI
@@ -495,10 +533,8 @@
                     //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
                     if (di_duimp == 1){
                         var Ger_Log_Importacao = 5 * 1412;
-                        alert (Ger_Log_Importacao);
                     } else if (di_duimp > 1  <= 5){
                         var Ger_Log_Importacao = 0.95 * 1412 * di_duimp;
-                        alert (Ger_Log_Importacao);
                     } else if (di_duimp > 5  <= 10){
                         var Ger_Log_Importacao = 0.85 * 1412 * di_duimp;
                     } else if (di_duimp > 10  <= 15){
@@ -541,6 +577,8 @@
                 } else {
                     alert("erro taxa siscomex");
                 }
+
+                var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
                 //Taxa ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
 
                 
@@ -603,48 +641,52 @@
                     if (totalcontainer20 > 0){
 
                         if(continenteorigem == 'Americano-USA'){
-                            var vunitab20 = totalcontainer20 * (1297.00 * taxadolar);
+                            var freteinternacionalmaritimo20 = totalcontainer20 * (1297.00 * taxadolar);
                         }else if (continenteorigem == 'Europeu-Reino Unido'){
-                            var vunitab20 =  totalcontainer20 * (1122.00 * taxadolar);
+                            var freteinternacionalmaritimo20 =  totalcontainer20 * (1122.00 * taxadolar);
                         }else if (continenteorigem == 'Asiático-China'){
-                            var vunitab20 = totalcontainer20 * (4094.00 * taxadolar);
+                            var freteinternacionalmaritimo20 = totalcontainer20 * (4094.00 * taxadolar);
                         }else if (continenteorigem == 'Africano-África do Sul'){
-                            var vunitab20 = totalcontainer20 * (882.00 * taxadolar);
+                            var freteinternacionalmaritimo20 = totalcontainer20 * (882.00 * taxadolar);
                         }else if (continenteorigem == 'Oceania-Austrália'){
-                            var vunitab20 = totalcontainer20 * (3034.00 * taxadolar);
+                            var freteinternacionalmaritimo20 = totalcontainer20 * (3034.00 * taxadolar);
                         }else if (continenteorigem == 'Oriente Médio-Arábia Saudita'){
-                            var vunitab20 = totalcontainer20 * (3047.00 * taxadolar);
+                            var freteinternacionalmaritimo20 = totalcontainer20 * (3047.00 * taxadolar);
                         }
+
+                        var freteinternacionalmaritimo20Num = parseFloat(freteinternacionalmaritimo20);
                     } 
                     //se container40 for selecionado
                     if(totalcontainer40 > 0){
                         if(continenteorigem == 'Americano-USA'){
-                            var vunitab40 = totalcontainer40 * (1383.00 * taxadolar);
+                            var freteinternacionalmaritimo40 = totalcontainer40 * (1383.00 * taxadolar);
                         }else if (continenteorigem == 'Europeu-Reino Unido'){
-                            var vunitab40 =  totalcontainer40 * (1334.00 * taxadolar);
+                            var freteinternacionalmaritimo40 =  totalcontainer40 * (1334.00 * taxadolar);
                         }else if (continenteorigem == 'Asiático-China'){
-                            var vunitab40 = totalcontainer40 * (4422.00 * taxadolar);
+                            var freteinternacionalmaritimo40 = totalcontainer40 * (4422.00 * taxadolar);
                         }else if (continenteorigem == 'Africano-África do Sul'){
-                            var vunitab40 = totalcontainer40 * (941.00 * taxadolar);
+                            var freteinternacionalmaritimo40 = totalcontainer40 * (941.00 * taxadolar);
                         }else if (continenteorigem == 'Oceania-Austrália'){
-                            var vunitab40 = totalcontainer40 * (5253.00 * taxadolar);
+                            var freteinternacionalmaritimo40 = totalcontainer40 * (5253.00 * taxadolar);
                         }else if (continenteorigem == 'Oriente Médio-Arábia Saudita'){
-                            var vunitab40 = totalcontainer40 * (4362.00 * taxadolar);
+                            var freteinternacionalmaritimo40 = totalcontainer40 * (4362.00 * taxadolar);
                         }
+                        var freteinternacionalmaritimo40Num = parseFloat(freteinternacionalmaritimo40);
                     }
                     //total valor unitario em R$
-                    var freteinternacionalmaritimo = vunitab20 + vunitab40
+                    var freteinternacionalmaritimo = freteinternacionalmaritimo20Num + freteinternacionalmaritimo40Num
+                    var freteinternacionalmaritimoNum = parseFloat(freteinternacionalmaritimo);
                     //Imposto de Importação-I.I.
-                    var impostoimpII = (valorNum + freteinternacionalmaritimo + segurointernacional) * iiNum;
+                    var impostoimpII = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * iiNum;
 
                     //Imposto de Produtos Industrializados-I.P.I.
                     var impostoProdIndIPI = (valorNum + impostoimpII)*ipiNum;
 
                     //PIS/PASEP-Programa de Integração Social
-                    var PIS_PASEP = (valorNum + freteinternacionalmaritimo + segurointernacional) * pisNum;
+                    var PIS_PASEP = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * pisNum;
 
                     //COFINS-Contribuição para Financiamento da Seguridade Social
-                    var valorCOFINS = (valorNum + freteinternacionalmaritimo + segurointernacional) * cofinsNum;
+                    var valorCOFINS = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * cofinsNum;
 
                     //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
                     var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum;
@@ -718,9 +760,8 @@
                     var taxaLI = (10 * li_lcpoNum ) + ValorLI;
                 }else if(li_lcpoNum > 50 ){
                     var taxaLI = (5 * li_lcpoNum ) + ValorLI;
-                }               
-                
-                
+                }     
+                                
                 var data = {
                     descricao : descricao,
                     classificacao : classificacao,
@@ -768,10 +809,10 @@
                     taxaicms: taxaicms,
                     taxaDesconsolidacaoblawb: taxaDesconsolidacaoblawb,
                     taxaSindicatoAduaneiro: taxaSindicatoAduaneiro,
-                    freteinternacionalmaritimo:freteinternacionalmaritimo,
+                    freteinternacionalmaritimoNum:freteinternacionalmaritimoNum,
                     freteinternacionalaereo:freteinternacionalaereo,
-                    freteinternacionalmaritimo40:vunitab40,
-                    freteinternacionalmaritimo20:vunitab20,
+                    freteinternacionalmaritimo40Num:freteinternacionalmaritimo40Num,
+                    freteinternacionalmaritimo20Num:freteinternacionalmaritimo20Num,
                     impostoimpII:impostoimpII,
                     impostoProdIndIPI:impostoProdIndIPI,
                     PIS_PASEP:PIS_PASEP,
@@ -794,7 +835,259 @@
                         console.error(xhr.responseText);
                     }
                 });
+
+                
+                exibirModal();
+                
+                function exibirModal() {
+                    var modalBodyContent = document.getElementById('modal-body-content');
+                
+                    // Adicione aqui os valores das variáveis que deseja exibir
+                    modalBodyContent.innerHTML = `
+                    <table>
+                        <tr>
+                          <th>Variável</th>
+                          <th>Valor</th>
+                        </tr>
+                        <tr>
+                          <td>Classificação Fiscal-SH/NCM</td>
+                          <td>${classificacao}</td>
+                        </tr>
+                        <tr>
+                          <td>II</td>
+                          <td>${ii}</td>
+                        </tr>
+                        <tr>
+                          <td>PIS</td>
+                          <td>${pis}</td>
+                        </tr>
+                        <tr>
+                          <td>IPI</td>
+                          <td>${ipi}</td>
+                        </tr>
+                        <tr>
+                          <td>COFINS</td>
+                          <td>${cofins}</td>
+                        </tr>
+                        <tr>
+                          <td>ICMS</td>
+                          <td>${icms}</td>
+                        </tr>
+                        <tr>
+                          <td>Peso</td>
+                          <td>${peso}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade</td>
+                          <td>${quantidade}</td>
+                        </tr>
+                        <tr>
+                          <td>INCOTERM</td>
+                          <td>${incoterm}</td>
+                        </tr>
+                        <tr>
+                          <td>Nº de LIs</td>
+                          <td>${lis}</td>
+                        </tr>
+                        <tr>
+                          <td>Nº de Adições à LI-LCPO</td>
+                          <td>${li_lcpo}</td>
+                        </tr>
+                        <tr>
+                          <td>Nº de Adições à DI-DUIMP</td>
+                          <td>${di_duimp}</td>
+                        </tr>
+                        <tr>
+                          <td>Local do Desembaraço Aduaneiro</td>
+                          <td>${desembaraco}</td>
+                        </tr>
+                        <tr>
+                          <td>Tipo de Acondicionamento</td>
+                          <td>${acondicionamento}</td>
+                        </tr>
+                        <tr>
+                          <td>Tipo de Carga</td>
+                          <td>${acondicionamentocontainer}</td>
+                        </tr>
+                        <tr>
+                          <td>Modal</td>
+                          <td>${modal}</td>
+                        </tr>
+                        <tr>
+                          <td>Porto/Aeroporto de Embarque-País</td>
+                          <td>${embarque}</td>
+                        </tr>
+                        <tr>
+                          <td>Porto/Aeroporto de Destino-País</td>
+                          <td>${destino}</td>
+                        </tr>
+                        <tr>
+                          <td>Valor da Mercadoria</td>
+                          <td>${valor}</td>
+                        </tr>
+                        <tr>
+                          <td>Ger_Log_Importacao</td>
+                          <td>${Ger_Log_Importacao}</td>
+                        </tr>
+                        <tr>
+                          <td>Container 20'</td>
+                          <td>${container20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade 20'</td>
+                          <td>${quantity20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Container 40'</td>
+                          <td>${container40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade 40'</td>
+                          <td>${quantity40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Container High Cube 40'</td>
+                          <td>${containerHighCube40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade High Cube 40'</td>
+                          <td>${quantityHighCube40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Graneleiro Dry 20'</td>
+                          <td>${GraneleiroDry20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Graneleiro Dry 20'</td>
+                          <td>${quantityGraneleiroDry20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Flat Rack 20'</td>
+                          <td>${FlatRack20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Flat Rack 20'</td>
+                          <td>${quantityFlatRack20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Flat Rack 40'</td>
+                          <td>${FlatRack40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Flat Rack 40'</td>
+                          <td>${quantityFlatRack40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Open Top 20'</td>
+                          <td>${OpenTop20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Open Top 20'</td>
+                          <td>${quantityOpenTop20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Open Top 40'</td>
+                          <td>${OpenTop40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Open Top 40'</td>
+                          <td>${quantityOpenTop40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Refrigerado 20'</td>
+                          <td>${Refrigerado20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Refrigerado 20'</td>
+                          <td>${quantityRefrigerado20Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Refrigerado 40'</td>
+                          <td>${Refrigerado40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Quantidade Refrigerado 40'</td>
+                          <td>${quantityRefrigerado40Value}</td>
+                        </tr>
+                        <tr>
+                          <td>Total de Containers</td>
+                          <td>${totalcontainer}</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa Siscomex</td>
+                          <td>${taxasiscomex}</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa ICMS</td>
+                          <td>${taxaicms}</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa de Desconsolidação BL/AWB</td>
+                          <td>${taxaDesconsolidacaoblawb}</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa Sindicato Aduaneiro</td>
+                          <td>${taxaSindicatoAduaneiro}</td>
+                        </tr>
+                        <tr>
+                          <td>Frete Internacional Marítimo</td>
+                          <td>${freteinternacionalmaritimoNum}</td>
+                        </tr>
+                        <tr>
+                          <td>Frete Internacional Aéreo</td>
+                          <td>${freteinternacionalaereo}</td>
+                        </tr>
+                        <tr>
+                          <td>Frete Internacional Marítimo 40'</td>
+                          <td>${freteinternacionalmaritimo40Num}</td>
+                        </tr>
+                        <tr>
+                          <td>Frete Internacional Marítimo 20'</td>
+                          <td>${freteinternacionalmaritimo20Num}</td>
+                        </tr>
+                        <tr>
+                          <td>Imposto Imp. Importação (II)</td>
+                          <td>${impostoimpII}</td>
+                        </tr>
+                        <tr>
+                          <td>Imposto Prod. Ind. (IPI)</td>
+                          <td>${impostoProdIndIPI}</td>
+                        </tr>
+                        <tr>
+                          <td>PIS/PASEP</td>
+                          <td>${PIS_PASEP}</td>
+                        </tr>
+                        <tr>
+                          <td>Valor COFINS</td>
+                          <td>${valorCOFINS}</td>
+                        </tr>
+                        <tr>
+                          <td>Valor ICMS</td>
+                          <td>${valorICMS}</td>
+                        </tr>
+                        <tr>
+                          <td>Valor LI</td>
+                          <td>${ValorLI}</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa LI</td>
+                          <td>${taxaLI}</td>
+                        </tr>
+                        <tr>
+                          <td>Taxa DUIMP</td>
+                          <td>${taxaduimp}</td>
+                        </tr>
+                      </table>
+                    `;
+                
+                    // Exibir o modal
+                    var myModal = new bootstrap.Modal(document.getElementById('resultado'));
+                    myModal.show();
+                }
+
         }
+
+        
     </script>
 </body>
 
