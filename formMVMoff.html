@@ -595,6 +595,10 @@
             //Seguro Internacional Marítimo/Aéreo
             var segurointernacional = (0.2 * valor) / 100;
 
+            if (segurointernacional < 80 ){
+                var segurointernacional = 80;
+            }
+
             //Taxa do Siscomex (calculo)
             if (di_duimp >= 0 && di_duimp <= 2) {
                 var taxasiscomex = (115.67 * ndi_duimp) + (38.56 * di_duimp);
@@ -612,13 +616,13 @@
                 alert("erro taxa siscomex");
             }
 
-            var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
+            var taxasiscomexNum = parseFloat(taxasiscomex / taxadolar); // Taxa Siscomex
 
             // Taxa Taxa de Desconsolidação de B/L/AWB
-            var taxaDesconsolidacaoblawb = 50.00
+            var taxaDesconsolidacaoblawb = 50.00 / taxadolar;
 
             //Taxa do Sindicato de Despachantes Aduaneiros-Opcional
-            var taxaSindicatoAduaneiro = 291.40
+            var taxaSindicatoAduaneiro = 291.40 / taxadolar;
 
             //variaveis das caixas
             function obterValoresCaixa() {
@@ -653,7 +657,7 @@
             const valoresCaixas = obterValoresCaixa();
 
             // Soma todas as metragens cúbicas das caixas
-            const somaMetragensCubicas = somarMetragensCubicas(valoresCaixas) / 100;
+            const somaMetragensCubicas = somarMetragensCubicas(valoresCaixas) / 6000;
 
             //frete internacional
             //verifica se é modal Maritimo ou Aereo
@@ -718,7 +722,7 @@
                 var valorCOFINS = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * (cofinsNum / 100);
 
                 //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-                var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum) * (icmsNum / 100);
+                var valorICMS = (valorNum + impostoimpII + impostoProdIndIPI + taxasiscomexNum) * (icmsNum / 100);
 
             } else if (modal == 'aereo') {
                 if (continenteorigem == 'Americano-USA') {
@@ -759,6 +763,8 @@
                     }
                 }
 
+                var Ger_Log_Importacaodolar = Ger_Log_Importacao / taxadolar;
+
                 //Imposto de Importação-I.I.
                 var impostoimpII = (valorNum + freteinternacionalaereo + segurointernacional) * (iiNum / 100);
 
@@ -772,24 +778,30 @@
                 var valorCOFINS = (valorNum + freteinternacionalaereo + segurointernacional) * (cofinsNum / 100);
 
                 //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-                var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum) * (icmsNum / 100);
+                var valorICMS = (valorNum + impostoimpII + impostoProdIndIPI + taxasiscomexNum) * (icmsNum / 100);
+
+                //Custo Operação Portuária Armazenagem Marítima/Aérea-1º Período
+                var custooperacao = (2.3 / 100)*valorNum;
             }
 
             // Taxa Administrativa de Emissão de Licença de Importação
             var ValorLI = lisNum * 200
+
             if (li_lcpoNum <= 2) {
-                var taxaLI = (50 * li_lcpoNum) + ValorLI;
+                var taxaLI = ((50 * li_lcpoNum) + ValorLI) / taxadolar;
             } else if (li_lcpoNum > 2 <= 5) {
-                var taxaLI = (40 * li_lcpoNum) + ValorLI;
+                var taxaLI = ((40 * li_lcpoNum) + ValorLI) / taxadolar;
             } else if (li_lcpoNum > 5 <= 10) {
-                var taxaLI = (30 * li_lcpoNum) + ValorLI;
+                var taxaLI = ((30 * li_lcpoNum) + ValorLI) / taxadolar;
             } else if (li_lcpoNum > 10 <= 20) {
-                var taxaLI = (20 * li_lcpoNum) + ValorLI;
+                var taxaLI = ((20 * li_lcpoNum) + ValorLI) / taxadolar;
             } else if (li_lcpoNum > 20 <= 50) {
-                var taxaLI = (10 * li_lcpoNum) + ValorLI;
+                var taxaLI = ((10 * li_lcpoNum) + ValorLI) / taxadolar;
             } else if (li_lcpoNum > 50) {
-                var taxaLI = (5 * li_lcpoNum) + ValorLI;
+                var taxaLI = ((5 * li_lcpoNum) + ValorLI) / taxadolar;
             }
+
+            var taxaduimpdolar = taxaduimp / taxadolar; 
 
             var data = {
                 descricao: descricao,
@@ -810,7 +822,7 @@
                 modal: modal,
                 destino: destino,
                 valor: valor,
-                Ger_Log_Importacao: Ger_Log_Importacao,
+                Ger_Log_Importacaodolar: Ger_Log_Importacaodolar,
                 container20Value: container20Value,
                 quantity20Value: quantity20Value,
                 container40Value: container40Value,
@@ -832,7 +844,7 @@
                 Refrigerado40Value: Refrigerado40Value,
                 quantityRefrigerado40Value: quantityRefrigerado40Value,
                 totalcontainer: totalcontainer,
-                taxasiscomex: taxasiscomex,
+                taxasiscomexNum: taxasiscomexNum,
                 taxaDesconsolidacaoblawb: taxaDesconsolidacaoblawb,
                 taxaSindicatoAduaneiro: taxaSindicatoAduaneiro,
                 freteinternacionalmaritimoNum: freteinternacionalmaritimoNum,
@@ -846,7 +858,8 @@
                 valorICMS: valorICMS,
                 ValorLI: ValorLI,
                 taxaLI: taxaLI,
-                taxaduimp: taxaduimp
+                taxaduimpdolar: taxaduimpdolar,
+                custooperacao:custooperacao
             };
 
             $.ajax({
@@ -943,8 +956,11 @@
                         <tr>
                           <td>Gerenciamento Logístico Importação</td>
                           <td>${Ger_Log_Importacao}</td>
-                        </tr>`
-
+                        </tr>
+                        <tr>
+                            <td>Gerenciamento Logístico Importação em Dolar</td>
+                            <td>${Ger_Log_Importacaodolar}</td>
+                          </tr>`
                 if (modalType === 'maritimo') {
                     htmlContent += ` <tr><td>Frete Internacional Marítimo</td><td>${freteinternacionalmaritimoNum}</td></tr>`;
                         
@@ -958,12 +974,13 @@
                     <tr><td>Imposto Prod. Ind. (IPI)</td><td>${impostoProdIndIPI}</td></tr>
                     <tr><td>PIS/PASEP-Programa de Integração Social</td><td>${PIS_PASEP}</td></tr>
                     <tr><td>COFINS-Contribuição para Financiamento da Seguridade Social</td><td>${valorCOFINS}</td></tr>
-                    <tr><td>Taxa Siscomex</td><td>${taxasiscomex}</td>
+                    <tr><td>Taxa Siscomex</td><td>${taxasiscomexNum}</td>
                     <tr><td>ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação</td><td>${valorICMS}</td></tr>
-                    <tr><td>Taxa Administrativa de Emissão de Licença de Importação</td><td>${ValorLI}</td></tr>
-                    <tr><td>Taxa de Desconsolidação de B/L/AWB</td><td>50</td></tr>
-                    <tr><td>Taxa do Sindicato de Despachantes Aduaneiros-Opcional</td><td>291.40</td></tr>
-                    <tr><td>Desembaraço Aduaneiro/DUIMP</td><td>${taxaduimp}</td></tr>
+                    <tr><td>Taxa Administrativa de Emissão de Licença de Importação</td><td>${taxaLI}</td></tr>
+                    <tr><td>Taxa de Desconsolidação de B/L/AWB</td><td>${taxaDesconsolidacaoblawb}</td></tr>
+                    <tr><td>Taxa do Sindicato de Despachantes Aduaneiros-Opcional</td><td>${taxaSindicatoAduaneiro}</td></tr>
+                    <tr><td>Custo Operação Portuária Armazenagem Marítima/Aérea-1º Período</td><td>${custooperacao}</td></tr>
+                    <tr><td>Desembaraço Aduaneiro/DUIMP</td><td>${taxaduimpdolar}</td></tr>
                     `;                        
 
                 htmlContent += `</table>`;
