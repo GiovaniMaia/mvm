@@ -43,21 +43,22 @@
         table {
             width: 100%;
             border-collapse: collapse;
-          }
-        
-          th, td {
+        }
+
+        th,
+        td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-          }
-        
-          th {
+        }
+
+        th {
             background-color: #f2f2f2;
-          }
-        
-          td {
+        }
+
+        td {
             background-color: #fff;
-          }
+        }
     </style>
 </head>
 
@@ -121,11 +122,6 @@
             </div>
 
             <div class="form-group">
-                <label for="incoterm">INCOTERM:</label>
-                <input type="text" class="form-control" id="incoterm" required>
-            </div>
-
-            <div class="form-group">
                 <label for="lis">Nº ESTIMADO DE L.I.´s:</label>
                 <input type="number" class="form-control" id="lis" min="0" required>
             </div>
@@ -133,6 +129,11 @@
             <div class="form-group">
                 <label for="li_lcpo">Nº ESTIMADO DE ADIÇÕES À L.I.-LCPO</label>
                 <input type="number" class="form-control" id="li_lcpo" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lis">Nº ESTIMADO DE DI/DUIMP:</label>
+                <input type="number" class="form-control" id="ndi_duimp" min="0" required>
             </div>
 
             <div class="form-group">
@@ -284,13 +285,21 @@
             </div>
 
             <div class="form-group">
-                <label for="embarque">Porto/Aeroporto de Embarque-País:</label>
-                <input class="form-control" type="text" value="" id="embarque" name="embarque">
+                <label for="continenteorigem">Seleciona o Continente/origem do Embarque</label>
+                <select class="form-control" id="continenteorigem">
+                    <option value="">Selecione...</option>
+                    <option value="Americano-USA">Americano</option>
+                    <option value="Europeu-Reino Unido">Europeu</option>
+                    <option value="Asiático-China">Asiático</option>
+                    <option value="Africano-África do Sul">Africano</option>
+                    <option value="Oceania-Austrália">Oceania</option>
+                    <option value="Oriente Médio-Arábia Saudita">Oriente Médio</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="destino">Porto/Aeroporto de Destino-País:</label>
-                <input  class="form-control" type="text" value="" id="destino" name="destino">
+                <input class="form-control" type="text" value="" id="destino" name="destino">
             </div>
 
             <div class="form-group">
@@ -302,19 +311,6 @@
                 <label>Taxa do Dólar (Atualizada):</label>
                 <input type="text" class="form-control" id="taxa-dolar" readonly>
             </div>
-
-            <div class="form-group">
-                    <label for="continenteorigem">Seleciona o Continente/origem do Embarque</label>
-                    <select class="form-control" id="continenteorigem">
-                        <option value="">Selecione...</option>
-                        <option value="Americano-USA">Americano-USA</option>
-                        <option value="Europeu-Reino Unido">Europeu-Reino Unido</option>
-                        <option value="Asiático-China">Asiático-China</option>
-                        <option value="Africano-África do Sul">Africano-África do Sul</option>
-                        <option value="Oceania-Austrália">Oceania-Austrália</option>
-                        <option value="Oriente Médio-Arábia Saudita">Oriente Médio-Arábia Saudita</option>
-                    </select>
-                </div>
 
             <button type="button" id="enviar-formulario" class="btn btn-primary" onclick="converter()">Enviar</button>
         </form>
@@ -336,7 +332,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -440,483 +436,498 @@
         // Chamada à função para buscar a taxa de câmbio quando a página carrega
         window.addEventListener('load', getExchangeRate);
 
-        function converter(){
+        function converter() {
             var form = document.querySelector("form");
-            form.addEventListener("submit",function(evento){
-              evento.preventDefault();
+            form.addEventListener("submit", function (evento) {
+                evento.preventDefault();
             })
-                var descricao = document.getElementById('descricao').value;
-                var classificacao = document.getElementById('classificacao').value;
-                var ii = document.getElementById('ii').value;
-                var pis = document.getElementById('pis').value;
-                var ipi = document.getElementById('ipi').value;
-                var cofins = document.getElementById('cofins').value;
-                var icms = document.getElementById('icms').value;
-                var peso = document.getElementById('peso').value;
-                var quantidade = document.getElementById('quantidade').value;
-                var incoterm = document.getElementById('incoterm').value;
-                var lis = document.getElementById('lis').value;
-                var li_lcpo = document.getElementById('li_lcpo').value;
-                var di_duimp = document.getElementById('di_duimp').value;
-                var desembaraco = document.getElementById('desembaraco').value;
-                var acondicionamento = document.getElementById('acondicionamento').value;
-                var acondicionamentocontainer = document.getElementById('acondicionamentocontainer').value;
-                var modal = document.querySelector('input[name="modal"]:checked').value;
-                var embarque = document.getElementById('embarque').value;
-                var destino = document.getElementById('destino').value;
-                var valor = document.getElementById('valor').value;
-                var continenteorigem = document.getElementById('continenteorigem').value;
-                var taxadolarComSimbolo = document.getElementById('taxa-dolar').value;
-                var taxadolarSemSimbolo = taxadolarComSimbolo.replace('R$', '').trim(); // Remove "R$" e espaços em branco
-                var taxadolar = parseFloat(taxadolarSemSimbolo);
+            var descricao = document.getElementById('descricao').value;
+            var classificacao = document.getElementById('classificacao').value;
+            var ii = document.getElementById('ii').value;
+            var pis = document.getElementById('pis').value;
+            var ipi = document.getElementById('ipi').value;
+            var cofins = document.getElementById('cofins').value;
+            var icms = document.getElementById('icms').value;
+            var peso = document.getElementById('peso').value;
+            var quantidade = document.getElementById('quantidade').value;
+            var lis = document.getElementById('lis').value;
+            var li_lcpo = document.getElementById('li_lcpo').value;
+            var ndi_duimp = document.getElementById('ndi_duimp').value;
+            var di_duimp = document.getElementById('di_duimp').value;
+            var desembaraco = document.getElementById('desembaraco').value;
+            var acondicionamento = document.getElementById('acondicionamento').value;
+            var acondicionamentocontainer = document.getElementById('acondicionamentocontainer').value;
+            var modal = document.querySelector('input[name="modal"]:checked').value;
+            var destino = document.getElementById('destino').value;
+            var valor = document.getElementById('valor').value;
+            var continenteorigem = document.getElementById('continenteorigem').value;
+            var taxadolarComSimbolo = document.getElementById('taxa-dolar').value;
+            var taxadolarSemSimbolo = taxadolarComSimbolo.replace('R$', '').trim(); // Remove "R$" e espaços em branco
+            var taxadolar = parseFloat(taxadolarSemSimbolo);
 
-                // Convertendo as variáveis para números
-                var iiNum = parseFloat(ii); // Imposto de Importação
-                var ipiNum = parseFloat(ipi); // IPI
-                var pisNum = parseFloat(pis); // PIS
-                var cofinsNum = parseFloat(cofins); // COFINS
-                var icmsNum = parseFloat(icms); // Alíquota de ICMS
-                var valorNum = parseFloat(valor); // valor da mercadoria
-                var lisNum = parseInt(lis); // N estimado de LI
-                var li_lcpoNum = parseInt(li_lcpo); // N estimado de add LIs
+            // Convertendo as variáveis para números
+            var iiNum = parseFloat(ii); // Imposto de Importação
+            var ipiNum = parseFloat(ipi); // IPI
+            var pisNum = parseFloat(pis); // PIS
+            var cofinsNum = parseFloat(cofins); // COFINS
+            var icmsNum = parseFloat(icms); // Alíquota de ICMS
+            var valorNum = parseFloat(valor); // valor da mercadoria
+            var lisNum = parseInt(lis); // N estimado de LI
+            var li_lcpoNum = parseInt(li_lcpo); // N estimado de add LIs
 
-                var container20Value = container20.checked ? container20.value : null;
-                var quantity20Value = container20.checked ? parseInt(quantity20.value) : 0;
-                var container40Value = container40.checked ? container40.value : null;
-                var quantity40Value = container40.checked ? parseInt(quantity40.value) : 0;
-                var containerHighCube40Value = containerHighCube40.checked ? containerHighCube40.value : null;
-                var quantityHighCube40Value = containerHighCube40.checked ? parseInt(quantityHighCube40.value) : 0;
-                var GraneleiroDry20Value = GraneleiroDry20.checked ? GraneleiroDry20.value : null;
-                var quantityGraneleiroDry20Value = GraneleiroDry20.checked ? parseInt(quantityGraneleiroDry20.value) : 0;
-                var FlatRack20Value = FlatRack20.checked ? FlatRack20.value : null;
-                var quantityFlatRack20Value = FlatRack20.checked ? parseInt(quantityFlatRack20.value) : 0;
-                var FlatRack40Value = FlatRack40.checked ? FlatRack40.value : null;
-                var quantityFlatRack40Value = FlatRack40.checked ? parseInt(quantityFlatRack40.value) : 0;
-                var OpenTop20Value = OpenTop20.checked ? OpenTop20.value : null;
-                var quantityOpenTop20Value = OpenTop20.checked ? parseInt(quantityOpenTop20.value) : 0;
-                var OpenTop40Value = OpenTop40.checked ? OpenTop40.value : null;
-                var quantityOpenTop40Value = OpenTop40.checked ? parseInt(quantityOpenTop40.value) : 0;
-                var Refrigerado20Value = Refrigerado20.checked ? Refrigerado20.value : null;
-                var quantityRefrigerado20Value = Refrigerado20.checked ? parseInt(quantityRefrigerado20.value) : 0;
-                var Refrigerado40Value = Refrigerado40.checked ? Refrigerado40.value : null;
-                var quantityRefrigerado40Value = Refrigerado40.checked ? parseInt(quantityRefrigerado40.value) : 0;
-                    
-                //verifica se o desembaraco é pe             
-                if (desembaraco == "Pernambuco"){
-                    //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
-                    if (di_duimp == 1){
-                        var Ger_Log_Importacao = 4 * 1412;
-                    } else if (di_duimp > 1  <= 5){
-                        var Ger_Log_Importacao = 0.9 * 1412 * di_duimp;
-                    } else if (di_duimp > 5  <= 10){
-                        var Ger_Log_Importacao = 0.8 * 1412 * di_duimp;
-                    } else if (di_duimp > 10  <= 15){
-                        var Ger_Log_Importacao = 0.7 * 1412 * di_duimp;
-                    } else if (di_duimp > 15){
-                        var Ger_Log_Importacao = 0.6 * 1412 * di_duimp;
-                    }
+            var container20Value = container20.checked ? container20.value : null;
+            var quantity20Value = container20.checked ? parseInt(quantity20.value) : 0;
+            var container40Value = container40.checked ? container40.value : null;
+            var quantity40Value = container40.checked ? parseInt(quantity40.value) : 0;
+            var containerHighCube40Value = containerHighCube40.checked ? containerHighCube40.value : null;
+            var quantityHighCube40Value = containerHighCube40.checked ? parseInt(quantityHighCube40.value) : 0;
+            var GraneleiroDry20Value = GraneleiroDry20.checked ? GraneleiroDry20.value : null;
+            var quantityGraneleiroDry20Value = GraneleiroDry20.checked ? parseInt(quantityGraneleiroDry20.value) : 0;
+            var FlatRack20Value = FlatRack20.checked ? FlatRack20.value : null;
+            var quantityFlatRack20Value = FlatRack20.checked ? parseInt(quantityFlatRack20.value) : 0;
+            var FlatRack40Value = FlatRack40.checked ? FlatRack40.value : null;
+            var quantityFlatRack40Value = FlatRack40.checked ? parseInt(quantityFlatRack40.value) : 0;
+            var OpenTop20Value = OpenTop20.checked ? OpenTop20.value : null;
+            var quantityOpenTop20Value = OpenTop20.checked ? parseInt(quantityOpenTop20.value) : 0;
+            var OpenTop40Value = OpenTop40.checked ? OpenTop40.value : null;
+            var quantityOpenTop40Value = OpenTop40.checked ? parseInt(quantityOpenTop40.value) : 0;
+            var Refrigerado20Value = Refrigerado20.checked ? Refrigerado20.value : null;
+            var quantityRefrigerado20Value = Refrigerado20.checked ? parseInt(quantityRefrigerado20.value) : 0;
+            var Refrigerado40Value = Refrigerado40.checked ? Refrigerado40.value : null;
+            var quantityRefrigerado40Value = Refrigerado40.checked ? parseInt(quantityRefrigerado40.value) : 0;
 
-                    //Desembaraço Aduaneiro/DUIMP
-                    if(valorNum * taxadolar <= 100000){
-                        var taxaduimp = 1412*3;
-                    }else if(valorNum * taxadolar > 100000 && valorNum * taxadolar <= 300000){
-                        var taxaduimp = (0.5 * valorNum) + (2 * 1412);
-                    }else if(valorNum * taxadolar > 300000 && valorNum * taxadolar <= 500000){
-                        var taxaduimp = (0.4 * valorNum) + (3 * 1412);
-                    }else if(valorNum * taxadolar > 500000 && valorNum * taxadolar <= 700000){
-                        var taxaduimp = (0.3 * valorNum) + (3.5 * 1412);
-                    }else if(valorNum * taxadolar > 700000){
-                        var taxaduimp = (0.2 * valorNum) + (4 * 1412);
-                    }
-
-                }else{
-                    //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
-                    if (di_duimp == 1){
-                        var Ger_Log_Importacao = 5 * 1412;
-                    } else if (di_duimp > 1  <= 5){
-                        var Ger_Log_Importacao = 0.95 * 1412 * di_duimp;
-                    } else if (di_duimp > 5  <= 10){
-                        var Ger_Log_Importacao = 0.85 * 1412 * di_duimp;
-                    } else if (di_duimp > 10  <= 15){
-                        var Ger_Log_Importacao = 0.75 * 1412 * di_duimp;
-                    } else if (di_duimp > 15){
-                        var Ger_Log_Importacao = 0.65 * 1412 * di_duimp;
-                    } 
-
-                    //Desembaraço Aduaneiro/DUIMP
-                    if(valorNum * taxadolar <= 100000){
-                        var taxaduimp = 1412*4;
-                    }else if(valorNum * taxadolar > 100000 && valorNum * taxadolar <= 300000){
-                        var taxaduimp = (0.5 * valorNum) + (3 * 1412);
-                    }else if(valorNum * taxadolar > 300000 && valorNum * taxadolar <= 500000){
-                        var taxaduimp = (0.4 * valorNum) + (4 * 1412);
-                    }else if(valorNum * taxadolar > 500000 && valorNum * taxadolar <= 700000){
-                        var taxaduimp = (0.3 * valorNum) + (4.5 * 1412);
-                    }else if(valorNum * taxadolar > 700000){
-                        var taxaduimp = (0.2 * valorNum) + (5 * 1412);
-                    }
-
+            //verifica se o desembaraco é pe             
+            if (desembaraco == "Pernambuco") {
+                //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
+                if (ndi_duimp == 1) {
+                    var Ger_Log_Importacao = 4 * 1412;
+                } else if (ndi_duimp > 1 <= 5) {
+                    var Ger_Log_Importacao = 0.9 * 1412 * ndi_duimp;
+                } else if (ndi_duimp > 5 <= 10) {
+                    var Ger_Log_Importacao = 0.8 * 1412 * ndi_duimp;
+                } else if (ndi_duimp > 10 <= 15) {
+                    var Ger_Log_Importacao = 0.7 * 1412 * ndi_duimp;
+                } else if (ndi_duimp > 15) {
+                    var Ger_Log_Importacao = 0.6 * 1412 * ndi_duimp;
                 }
 
-                //Seguro Internacional Marítimo/Aéreo
-                var segurointernacional = (0.2 * valor)/100;
+                //Desembaraço Aduaneiro/DUIMP
+                if (valorNum <= 100000) {
+                    var taxaduimp = 1412 * 3;
+                } else if (valorNum > 100000 && valorNum <= 300000) {
+                    var taxaduimp = (0.05 * valorNum);
 
-                //Taxa do Siscomex (calculo)
-                if (di_duimp > 0 && di_duimp <= 2) {
-                    var taxasiscomex = 38.56;
-                } else if (di_duimp > 2 && di_duimp <= 5) {
-                    var taxasiscomex = 30.85;
-                } else if (di_duimp > 5 && di_duimp <= 10) {
-                    var taxasiscomex = 23.14;
-                } else if (di_duimp > 10 && di_duimp <= 20) {
-                    var taxasiscomex = 15.42;
-                } else if (di_duimp > 20 && di_duimp <= 50) {
-                    var taxasiscomex = 7.71;
-                } else if (di_duimp > 50) {
-                    var taxasiscomex = 3.86;
-                } else {
-                    alert("erro taxa siscomex");
+                    if (taxaduimp < 2 * 1412) {
+                        var taxaduimp = (2 * 1412);
+                    }
+
+                } else if (valorNum > 300000 && valorNum <= 500000) {
+                    var taxaduimp = (0.04 * valorNum);
+
+                    if (taxaduimp < 3 * 1412) {
+                        var taxaduimp = (3 * 1412);
+                    }
+
+                } else if (valorNum > 500000 && valorNum <= 700000) {
+                    var taxaduimp = (0.03 * valorNum);
+
+                    if (taxaduimp < 3.5 * 1412) {
+                        var taxaduimp = (3.5 * 1412);
+                    }
+
+                } else if (valorNum > 700000) {
+                    var taxaduimp = (0.02 * valorNum);
+
+                    if (taxaduimp < 4 * 1412) {
+                        var taxaduimp = (4 * 1412);
+                    }
                 }
 
-                var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
-                //Taxa ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-
-                
-
-                // Realizando o cálculo do ICMS
-                var calculoicms = iiNum + ipiNum + pisNum + cofinsNum + taxasiscomexNum;
-                var taxaicms = calculoicms * icmsNum;
-
-                // Taxa Taxa de Desconsolidação de B/L/AWB
-                var taxaDesconsolidacaoblawb = 50.00
-
-                //Taxa do Sindicato de Despachantes Aduaneiros-Opcional
-                var taxaSindicatoAduaneiro = 291.40
-
-                //variaveis das caixas
-                function obterValoresCaixa() {
-                    const valoresCaixas = [];
-                    const numCaixasInput = document.getElementById('num-caixas');
-                    const caixasSection = document.getElementById('caixas-section');
-                    const numCaixas = parseInt(numCaixasInput.value);
-                    for (let i = 1; i <= numCaixas; i++) {
-                        const altura = parseFloat(document.getElementById(`altura-${i}`).value);
-                        const largura = parseFloat(document.getElementById(`largura-${i}`).value);
-                        const comprimento = parseFloat(document.getElementById(`comprimento-${i}`).value);
-        
-                        // Calcular metragem cúbica
-                        const metragemCubica = altura * largura * comprimento;
-        
-                        valoresCaixas.push({ altura, largura, comprimento, metragemCubica });
-                    }
-                    return valoresCaixas;
+            } else {
+                //Gerenciamento Logístico-Importação (Plataforma Digital HUB COMEX)-Opcional   
+                if (ndi_duimp == 1) {
+                    var Ger_Log_Importacao = 5 * 1412;
+                } else if (ndi_duimp > 1 <= 5) {
+                    var Ger_Log_Importacao = 0.95 * 1412 * ndi_duimp;
+                } else if (ndi_duimp > 5 <= 10) {
+                    var Ger_Log_Importacao = 0.85 * 1412 * ndi_duimp;
+                } else if (ndi_duimp > 10 <= 15) {
+                    var Ger_Log_Importacao = 0.75 * 1412 * ndi_duimp;
+                } else if (ndi_duimp > 15) {
+                    var Ger_Log_Importacao = 0.65 * 1412 * ndi_duimp;
                 }
-        
-                // Função para somar todas as metragens cúbicas das caixas
-                function somarMetragensCubicas(caixas) {
-                    let soma = 0;
-                    for (let caixa of caixas) {
-                        soma += caixa.metragemCubica;
+
+                //Desembaraço Aduaneiro/DUIMP
+                if (valorNum <= 100000) {
+                    var taxaduimp = 1412 * 4;
+
+                } else if (valorNum > 100000 && valorNum <= 300000) {
+                    var taxaduimp = (0.05 * valorNum);
+
+                    if (taxaduimp < 3 * 1412) {
+                        var taxaduimp = (3 * 1412);
                     }
-                    return soma;
+
+                } else if (valorNum > 300000 && valorNum <= 500000) {
+                    var taxaduimp = (0.04 * valorNum);
+
+                    if (taxaduimp < 4 * 1412) {
+                        var taxaduimp = (4 * 1412);
+                    }
+
+                } else if (valorNum > 500000 && valorNum <= 700000) {
+                    var taxaduimp = (0.03 * valorNum);
+
+                    if (taxaduimp < 4.5 * 1412) {
+                        var taxaduimp = (4.5 * 1412);
+                    }
+
+                } else if (valorNum > 700000) {
+                    var taxaduimp = (0.02 * valorNum);
+
+                    if (taxaduimp < 5 * 1412) {
+                        var taxaduimp = (5 * 1412);
+                    }
                 }
-        
-                // Atualiza os valores das caixas antes de realizar a conversão
-                const valoresCaixas = obterValoresCaixa();
-        
-                // Soma todas as metragens cúbicas das caixas
-                const somaMetragensCubicas = somarMetragensCubicas(valoresCaixas);
-                
-                //frete internacional
-                //verifica se é modal Maritimo ou Aereo
-                if(modal == 'maritimo'){
-                    
-                    //frete internacional maritimo
-                    var totalcontainer = quantity20Value + quantity40Value + quantityHighCube40Value + quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityFlatRack40Value + quantityOpenTop20Value + quantityOpenTop40Value + quantityRefrigerado20Value + quantityRefrigerado40Value;
 
-                    var totalcontainer20 = quantity20Value +  quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityOpenTop20Value + quantityRefrigerado20Value;
-                    var totalcontainer40 = quantity40Value + quantityHighCube40Value + quantityFlatRack40Value + quantityOpenTop40Value + quantityRefrigerado40Value;
+            }
 
-                    //se container20 for selecionado
-                    if (totalcontainer20 > 0){
+            //Seguro Internacional Marítimo/Aéreo
+            var segurointernacional = (0.2 * valor) / 100;
 
-                        if(continenteorigem == 'Americano-USA'){
-                            var freteinternacionalmaritimo20 = totalcontainer20 * (1297.00 * taxadolar);
-                        }else if (continenteorigem == 'Europeu-Reino Unido'){
-                            var freteinternacionalmaritimo20 =  totalcontainer20 * (1122.00 * taxadolar);
-                        }else if (continenteorigem == 'Asiático-China'){
-                            var freteinternacionalmaritimo20 = totalcontainer20 * (4094.00 * taxadolar);
-                        }else if (continenteorigem == 'Africano-África do Sul'){
-                            var freteinternacionalmaritimo20 = totalcontainer20 * (882.00 * taxadolar);
-                        }else if (continenteorigem == 'Oceania-Austrália'){
-                            var freteinternacionalmaritimo20 = totalcontainer20 * (3034.00 * taxadolar);
-                        }else if (continenteorigem == 'Oriente Médio-Arábia Saudita'){
-                            var freteinternacionalmaritimo20 = totalcontainer20 * (3047.00 * taxadolar);
-                        }
+            //Taxa do Siscomex (calculo)
+            if (di_duimp >= 0 && di_duimp <= 2) {
+                var taxasiscomex = (115.67 * ndi_duimp) + (38.56 * di_duimp);
+            } else if (di_duimp > 2 && di_duimp <= 5) {
+                var taxasiscomex = (115.67 * ndi_duimp) + (30.85 * di_duimp);
+            } else if (di_duimp > 5 && di_duimp <= 10) {
+                var taxasiscomex = (115.67 * ndi_duimp) + (23.14 * di_duimp);
+            } else if (di_duimp > 10 && di_duimp <= 20) {
+                var taxasiscomex = (115.67 * ndi_duimp) + (15.42 * di_duimp);
+            } else if (di_duimp > 20 && di_duimp <= 50) {
+                var taxasiscomex = (115.67 * ndi_duimp) + (7.71 * di_duimp);
+            } else if (di_duimp > 50) {
+                var taxasiscomex = (115.67 * ndi_duimp) + (3.86 * di_duimp);
+            } else {
+                alert("erro taxa siscomex");
+            }
 
-                        var freteinternacionalmaritimo20Num = parseFloat(freteinternacionalmaritimo20);
-                    } 
-                    //se container40 for selecionado
-                    if(totalcontainer40 > 0){
-                        if(continenteorigem == 'Americano-USA'){
-                            var freteinternacionalmaritimo40 = totalcontainer40 * (1383.00 * taxadolar);
-                        }else if (continenteorigem == 'Europeu-Reino Unido'){
-                            var freteinternacionalmaritimo40 =  totalcontainer40 * (1334.00 * taxadolar);
-                        }else if (continenteorigem == 'Asiático-China'){
-                            var freteinternacionalmaritimo40 = totalcontainer40 * (4422.00 * taxadolar);
-                        }else if (continenteorigem == 'Africano-África do Sul'){
-                            var freteinternacionalmaritimo40 = totalcontainer40 * (941.00 * taxadolar);
-                        }else if (continenteorigem == 'Oceania-Austrália'){
-                            var freteinternacionalmaritimo40 = totalcontainer40 * (5253.00 * taxadolar);
-                        }else if (continenteorigem == 'Oriente Médio-Arábia Saudita'){
-                            var freteinternacionalmaritimo40 = totalcontainer40 * (4362.00 * taxadolar);
-                        }
-                        var freteinternacionalmaritimo40Num = parseFloat(freteinternacionalmaritimo40);
+            var taxasiscomexNum = parseFloat(taxasiscomex); // Taxa Siscomex
+
+            // Taxa Taxa de Desconsolidação de B/L/AWB
+            var taxaDesconsolidacaoblawb = 50.00
+
+            //Taxa do Sindicato de Despachantes Aduaneiros-Opcional
+            var taxaSindicatoAduaneiro = 291.40
+
+            //variaveis das caixas
+            function obterValoresCaixa() {
+                const valoresCaixas = [];
+                const numCaixasInput = document.getElementById('num-caixas');
+                const caixasSection = document.getElementById('caixas-section');
+                const numCaixas = parseInt(numCaixasInput.value);
+                for (let i = 1; i <= numCaixas; i++) {
+                    // Assume que as medidas estão em metros e converte para centímetros
+                    const altura = parseFloat(document.getElementById(`altura-${i}`).value);
+                    const largura = parseFloat(document.getElementById(`largura-${i}`).value);
+                    const comprimento = parseFloat(document.getElementById(`comprimento-${i}`).value);
+
+                    // Calcular metragem cúbica em cm³
+                    const metragemCubica = altura * largura * comprimento;
+
+                    valoresCaixas.push({ altura, largura, comprimento, metragemCubica });
+                }
+                return valoresCaixas;
+            }
+
+            // Função para somar todas as metragens cúbicas das caixas
+            function somarMetragensCubicas(caixas) {
+                let soma = 0;
+                for (let caixa of caixas) {
+                    soma += caixa.metragemCubica;
+                }
+                return soma;
+            }
+
+            // Atualiza os valores das caixas antes de realizar a conversão
+            const valoresCaixas = obterValoresCaixa();
+
+            // Soma todas as metragens cúbicas das caixas
+            const somaMetragensCubicas = somarMetragensCubicas(valoresCaixas) / 100;
+
+            //frete internacional
+            //verifica se é modal Maritimo ou Aereo
+            if (modal == 'maritimo') {
+
+                //frete internacional maritimo
+                var totalcontainer = quantity20Value + quantity40Value + quantityHighCube40Value + quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityFlatRack40Value + quantityOpenTop20Value + quantityOpenTop40Value + quantityRefrigerado20Value + quantityRefrigerado40Value;
+
+                var totalcontainer20 = quantity20Value + quantityGraneleiroDry20Value + quantityFlatRack20Value + quantityOpenTop20Value + quantityRefrigerado20Value;
+                var totalcontainer40 = quantity40Value + quantityHighCube40Value + quantityFlatRack40Value + quantityOpenTop40Value + quantityRefrigerado40Value;
+
+                //se container20 for selecionado
+                if (totalcontainer20 > 0) {
+
+                    if (continenteorigem == 'Americano-USA') {
+                        var freteinternacionalmaritimo20 = totalcontainer20 * 1297.00;
+                    } else if (continenteorigem == 'Europeu-Reino Unido') {
+                        var freteinternacionalmaritimo20 = totalcontainer20 * 1122.00;
+                    } else if (continenteorigem == 'Asiático-China') {
+                        var freteinternacionalmaritimo20 = totalcontainer20 * 4094.00;
+                    } else if (continenteorigem == 'Africano-África do Sul') {
+                        var freteinternacionalmaritimo20 = totalcontainer20 * 882.00;
+                    } else if (continenteorigem == 'Oceania-Austrália') {
+                        var freteinternacionalmaritimo20 = totalcontainer20 * 3034.00;
+                    } else if (continenteorigem == 'Oriente Médio-Arábia Saudita') {
+                        var freteinternacionalmaritimo20 = totalcontainer20 * 3047.00;
                     }
-                    //total valor unitario em R$
-                    var freteinternacionalmaritimo = freteinternacionalmaritimo20Num + freteinternacionalmaritimo40Num
-                    var freteinternacionalmaritimoNum = parseFloat(freteinternacionalmaritimo);
-                    //Imposto de Importação-I.I.
-                    var impostoimpII = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * iiNum;
 
-                    //Imposto de Produtos Industrializados-I.P.I.
-                    var impostoProdIndIPI = (valorNum + impostoimpII)*ipiNum;
+                    var freteinternacionalmaritimo20Num = parseFloat(freteinternacionalmaritimo20);
+                }
+                //se container40 for selecionado
+                if (totalcontainer40 > 0) {
+                    if (continenteorigem == 'Americano-USA') {
+                        var freteinternacionalmaritimo40 = totalcontainer40 * 1383.00;
+                    } else if (continenteorigem == 'Europeu-Reino Unido') {
+                        var freteinternacionalmaritimo40 = totalcontainer40 * 1334.00;
+                    } else if (continenteorigem == 'Asiático-China') {
+                        var freteinternacionalmaritimo40 = totalcontainer40 * 4422.00;
+                    } else if (continenteorigem == 'Africano-África do Sul') {
+                        var freteinternacionalmaritimo40 = totalcontainer40 * 941.00;
+                    } else if (continenteorigem == 'Oceania-Austrália') {
+                        var freteinternacionalmaritimo40 = totalcontainer40 * 5253.00;
+                    } else if (continenteorigem == 'Oriente Médio-Arábia Saudita') {
+                        var freteinternacionalmaritimo40 = totalcontainer40 * 4362.00;
+                    }
+                    var freteinternacionalmaritimo40Num = parseFloat(freteinternacionalmaritimo40);
+                }
+                //total valor unitario em R$
+                var freteinternacionalmaritimo = freteinternacionalmaritimo20Num + freteinternacionalmaritimo40Num
+                var freteinternacionalmaritimoNum = parseFloat(freteinternacionalmaritimo);
 
-                    //PIS/PASEP-Programa de Integração Social
-                    var PIS_PASEP = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * pisNum;
+                //Imposto de Importação-I.I.
+                var impostoimpII = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * (iiNum / 100);
 
-                    //COFINS-Contribuição para Financiamento da Seguridade Social
-                    var valorCOFINS = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * cofinsNum;
+                //Imposto de Produtos Industrializados-I.P.I.
+                var impostoProdIndIPI = (valorNum + impostoimpII) * (ipiNum / 100);
 
-                    //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum;
+                //PIS/PASEP-Programa de Integração Social
+                var PIS_PASEP = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * (pisNum / 100);
 
-                }else if (modal == 'aereo'){
-                    if(continenteorigem == 'Americano-USA'){
-                       var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
-                       
-                       if (freteinternacionalaereo < (3082.94*taxadolar)){
+                //COFINS-Contribuição para Financiamento da Seguridade Social
+                var valorCOFINS = (valorNum + freteinternacionalmaritimoNum + segurointernacional) * (cofinsNum / 100);
+
+                //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
+                var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum) * (icmsNum / 100);
+
+            } else if (modal == 'aereo') {
+                if (continenteorigem == 'Americano-USA') {
+                    var freteinternacionalaereo = somaMetragensCubicas * 7;
+
+                    if (freteinternacionalaereo < 3082.94) {
                         var freteinternacionalaereo = 3082.94;
-                       }
-                    }else if(continenteorigem == 'Europeu-Reino Unido'){
-                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
-                        
-                        if (freteinternacionalaereo < (3082.94*taxadolar)){
-                         var freteinternacionalaereo = 3082.94;
-                        }
-                    }else if(continenteorigem == 'Asiático-China'){
-                        var freteinternacionalaereo = somaMetragensCubicas * (22 * taxadolar);
-                        
-                        if (freteinternacionalaereo < (3082.94*taxadolar)){
-                         var freteinternacionalaereo = 3082.94;
-                        }
-                    }else if(continenteorigem == 'Africano-África do Sul'){
-                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
-                        
-                        if (freteinternacionalaereo < (3082.94*taxadolar)){
-                         var freteinternacionalaereo = 3082.94;
-                        }
-                    }else if(continenteorigem == 'Oceania-Austrália'){
-                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
-                        
-                        if (freteinternacionalaereo < (3082.94*taxadolar)){
-                         var freteinternacionalaereo = 3082.94;
-                        }
-                    }else if(continenteorigem == 'Oriente Médio-Arábia Saudita'){
-                        var freteinternacionalaereo = somaMetragensCubicas * (7 * taxadolar);
-                        
-                        if (freteinternacionalaereo < (3082.94*taxadolar)){
-                         var freteinternacionalaereo = 3082.94;
-                        }
                     }
+                } else if (continenteorigem == 'Europeu-Reino Unido') {
+                    var freteinternacionalaereo = somaMetragensCubicas * 7;
 
-                    //Imposto de Importação-I.I.
-                    var impostoimpII = (valorNum + freteinternacionalaereo + segurointernacional) * iiNum;
+                    if (freteinternacionalaereo < 3082.94) {
+                        var freteinternacionalaereo = 3082.94;
+                    }
+                } else if (continenteorigem == 'Asiático-China') {
+                    var freteinternacionalaereo = somaMetragensCubicas * 22;
 
-                    //Imposto de Produtos Industrializados-I.P.I.
-                    var impostoProdIndIPI = (valorNum + impostoimpII)*ipiNum;
+                    if (freteinternacionalaereo < 3082.94) {
+                        var freteinternacionalaereo = 3082.94;
+                    }
+                } else if (continenteorigem == 'Africano-África do Sul') {
+                    var freteinternacionalaereo = somaMetragensCubicas * 7;
 
-                    //PIS/PASEP-Programa de Integração Social
-                    var PIS_PASEP = (valorNum + freteinternacionalaereo + segurointernacional) * pisNum;
+                    if (freteinternacionalaereo < 3082.94) {
+                        var freteinternacionalaereo = 3082.94;
+                    }
+                } else if (continenteorigem == 'Oceania-Austrália') {
+                    var freteinternacionalaereo = somaMetragensCubicas * 7;
 
-                    //COFINS-Contribuição para Financiamento da Seguridade Social
-                    var valorCOFINS = (valorNum + freteinternacionalaereo + segurointernacional) * cofinsNum;
+                    if (freteinternacionalaereo < 3082.94) {
+                        var freteinternacionalaereo = 3082.94;
+                    }
+                } else if (continenteorigem == 'Oriente Médio-Arábia Saudita') {
+                    var freteinternacionalaereo = somaMetragensCubicas * 7;
 
-                    //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
-                    var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum)*icmsNum;
+                    if (freteinternacionalaereo < 3082.94) {
+                        var freteinternacionalaereo = 3082.94;
+                    }
                 }
 
-                // Taxa Administrativa de Emissão de Licença de Importação
-                var ValorLI = lisNum * 200
-                if(li_lcpoNum <= 2){
-                    var taxaLI = (50 * li_lcpoNum ) + ValorLI;
-                }else if(li_lcpoNum > 2 <= 5 ){
-                    var taxaLI = (40 * li_lcpoNum ) + ValorLI;
-                }else if(li_lcpoNum > 5 <= 10 ){
-                    var taxaLI = (30 * li_lcpoNum ) + ValorLI;
-                }else if(li_lcpoNum > 10 <= 20 ){
-                    var taxaLI = (20 * li_lcpoNum ) + ValorLI;
-                }else if(li_lcpoNum > 20 <= 50 ){
-                    var taxaLI = (10 * li_lcpoNum ) + ValorLI;
-                }else if(li_lcpoNum > 50 ){
-                    var taxaLI = (5 * li_lcpoNum ) + ValorLI;
-                }     
-                                
-                var data = {
-                    descricao : descricao,
-                    classificacao : classificacao,
-                    ii: ii,
-                    pis: pis,
-                    ipi: ipi,
-                    cofins: cofins,
-                    icms: icms,
-                    peso: peso,
-                    quantidade: quantidade,
-                    incoterm : incoterm,
-                    lis : lis,
-                    li_lcpo : li_lcpo,
-                    di_duimp : di_duimp,
-                    desembaraco : desembaraco,
-                    acondicionamento: acondicionamento,
-                    acondicionamentocontainer: acondicionamentocontainer,
-                    modal: modal,
-                    embarque : embarque,
-                    destino: destino,
-                    valor: valor,
-                    Ger_Log_Importacao : Ger_Log_Importacao,
-                    container20Value: container20Value,
-                    quantity20Value: quantity20Value,
-                    container40Value: container40Value,
-                    quantity40Value: quantity40Value,
-                    containerHighCube40Value: containerHighCube40Value,
-                    quantityHighCube40Value: quantityHighCube40Value,
-                    GraneleiroDry20Value: GraneleiroDry20Value,
-                    quantityGraneleiroDry20Value: quantityGraneleiroDry20Value,
-                    FlatRack20Value: FlatRack20Value,
-                    quantityFlatRack20Value: quantityFlatRack20Value,
-                    FlatRack40Value: FlatRack40Value,
-                    quantityFlatRack40Value: quantityFlatRack40Value,
-                    OpenTop20Value: OpenTop20Value,
-                    quantityOpenTop20Value: quantityOpenTop20Value,
-                    OpenTop40Value: OpenTop40Value,
-                    quantityOpenTop40Value: quantityOpenTop40Value,
-                    Refrigerado20Value: Refrigerado20Value,
-                    quantityRefrigerado20Value: quantityRefrigerado20Value,
-                    Refrigerado40Value: Refrigerado40Value,
-                    quantityRefrigerado40Value: quantityRefrigerado40Value,
-                    totalcontainer : totalcontainer,
-                    taxasiscomex : taxasiscomex,
-                    taxaicms: taxaicms,
-                    taxaDesconsolidacaoblawb: taxaDesconsolidacaoblawb,
-                    taxaSindicatoAduaneiro: taxaSindicatoAduaneiro,
-                    freteinternacionalmaritimoNum:freteinternacionalmaritimoNum,
-                    freteinternacionalaereo:freteinternacionalaereo,
-                    freteinternacionalmaritimo40Num:freteinternacionalmaritimo40Num,
-                    freteinternacionalmaritimo20Num:freteinternacionalmaritimo20Num,
-                    impostoimpII:impostoimpII,
-                    impostoProdIndIPI:impostoProdIndIPI,
-                    PIS_PASEP:PIS_PASEP,
-                    valorCOFINS:valorCOFINS,
-                    valorICMS:valorICMS,
-                    ValorLI: ValorLI,
-                    taxaLI:taxaLI,
-                    taxaduimp:taxaduimp
-                };
-        
-                    $.ajax({
-                    url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm-2',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function(response) {
-                        console.log(response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
+                //Imposto de Importação-I.I.
+                var impostoimpII = (valorNum + freteinternacionalaereo + segurointernacional) * (iiNum / 100);
 
-                
-                exibirModal();
-                
-                function exibirModal() {
-                    var modalBodyContent = document.getElementById('modal-body-content');
-                
-                    // Adicione aqui os valores das variáveis que deseja exibir
-                    modalBodyContent.innerHTML = `
-                    <table>
-                        <tr>
-                          <th>Variável</th>
-                          <th>Valor</th>
-                        </tr>
-                        <tr>
-                          <td>Classificação Fiscal-SH/NCM</td>
-                          <td>${classificacao}</td>
-                        </tr>
-                        <tr>
-                          <td>II</td>
-                          <td>${ii}</td>
-                        </tr>
-                        <tr>
-                          <td>PIS</td>
-                          <td>${pis}</td>
-                        </tr>
-                        <tr>
-                          <td>IPI</td>
-                          <td>${ipi}</td>
-                        </tr>
-                        <tr>
-                          <td>COFINS</td>
-                          <td>${cofins}</td>
-                        </tr>
-                        <tr>
-                          <td>ICMS</td>
-                          <td>${icms}</td>
-                        </tr>
-                        <tr>
-                          <td>Peso</td>
-                          <td>${peso}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade</td>
-                          <td>${quantidade}</td>
-                        </tr>
-                        <tr>
-                          <td>INCOTERM</td>
-                          <td>${incoterm}</td>
-                        </tr>
-                        <tr>
-                          <td>Nº de LIs</td>
-                          <td>${lis}</td>
-                        </tr>
-                        <tr>
-                          <td>Nº de Adições à LI-LCPO</td>
-                          <td>${li_lcpo}</td>
-                        </tr>
-                        <tr>
-                          <td>Nº de Adições à DI-DUIMP</td>
-                          <td>${di_duimp}</td>
-                        </tr>
-                        <tr>
-                          <td>Local do Desembaraço Aduaneiro</td>
-                          <td>${desembaraco}</td>
-                        </tr>
-                        <tr>
-                          <td>Tipo de Acondicionamento</td>
-                          <td>${acondicionamento}</td>
-                        </tr>
-                        <tr>
-                          <td>Tipo de Carga</td>
-                          <td>${acondicionamentocontainer}</td>
-                        </tr>
-                        <tr>
-                          <td>Modal</td>
-                          <td>${modal}</td>
-                        </tr>
-                        <tr>
-                          <td>Porto/Aeroporto de Embarque-País</td>
-                          <td>${embarque}</td>
-                        </tr>
+                //Imposto de Produtos Industrializados-I.P.I.
+                var impostoProdIndIPI = (valorNum + impostoimpII) * (ipiNum / 100);
+
+                //PIS/PASEP-Programa de Integração Social
+                var PIS_PASEP = (valorNum + freteinternacionalaereo + segurointernacional) * (pisNum / 100);
+
+                //COFINS-Contribuição para Financiamento da Seguridade Social
+                var valorCOFINS = (valorNum + freteinternacionalaereo + segurointernacional) * (cofinsNum / 100);
+
+                //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
+                var valorICMS = (impostoimpII + impostoProdIndIPI + PIS_PASEP + valorCOFINS + taxasiscomexNum) * (icmsNum / 100);
+            }
+
+            // Taxa Administrativa de Emissão de Licença de Importação
+            var ValorLI = lisNum * 200
+            if (li_lcpoNum <= 2) {
+                var taxaLI = (50 * li_lcpoNum) + ValorLI;
+            } else if (li_lcpoNum > 2 <= 5) {
+                var taxaLI = (40 * li_lcpoNum) + ValorLI;
+            } else if (li_lcpoNum > 5 <= 10) {
+                var taxaLI = (30 * li_lcpoNum) + ValorLI;
+            } else if (li_lcpoNum > 10 <= 20) {
+                var taxaLI = (20 * li_lcpoNum) + ValorLI;
+            } else if (li_lcpoNum > 20 <= 50) {
+                var taxaLI = (10 * li_lcpoNum) + ValorLI;
+            } else if (li_lcpoNum > 50) {
+                var taxaLI = (5 * li_lcpoNum) + ValorLI;
+            }
+
+            var data = {
+                descricao: descricao,
+                classificacao: classificacao,
+                ii: ii,
+                pis: pis,
+                ipi: ipi,
+                cofins: cofins,
+                icms: icms,
+                peso: peso,
+                quantidade: quantidade,
+                lis: lis,
+                li_lcpo: li_lcpo,
+                di_duimp: di_duimp,
+                desembaraco: desembaraco,
+                acondicionamento: acondicionamento,
+                acondicionamentocontainer: acondicionamentocontainer,
+                modal: modal,
+                destino: destino,
+                valor: valor,
+                Ger_Log_Importacao: Ger_Log_Importacao,
+                container20Value: container20Value,
+                quantity20Value: quantity20Value,
+                container40Value: container40Value,
+                quantity40Value: quantity40Value,
+                containerHighCube40Value: containerHighCube40Value,
+                quantityHighCube40Value: quantityHighCube40Value,
+                GraneleiroDry20Value: GraneleiroDry20Value,
+                quantityGraneleiroDry20Value: quantityGraneleiroDry20Value,
+                FlatRack20Value: FlatRack20Value,
+                quantityFlatRack20Value: quantityFlatRack20Value,
+                FlatRack40Value: FlatRack40Value,
+                quantityFlatRack40Value: quantityFlatRack40Value,
+                OpenTop20Value: OpenTop20Value,
+                quantityOpenTop20Value: quantityOpenTop20Value,
+                OpenTop40Value: OpenTop40Value,
+                quantityOpenTop40Value: quantityOpenTop40Value,
+                Refrigerado20Value: Refrigerado20Value,
+                quantityRefrigerado20Value: quantityRefrigerado20Value,
+                Refrigerado40Value: Refrigerado40Value,
+                quantityRefrigerado40Value: quantityRefrigerado40Value,
+                totalcontainer: totalcontainer,
+                taxasiscomex: taxasiscomex,
+                taxaDesconsolidacaoblawb: taxaDesconsolidacaoblawb,
+                taxaSindicatoAduaneiro: taxaSindicatoAduaneiro,
+                freteinternacionalmaritimoNum: freteinternacionalmaritimoNum,
+                freteinternacionalaereo: freteinternacionalaereo,
+                freteinternacionalmaritimo40Num: freteinternacionalmaritimo40Num,
+                freteinternacionalmaritimo20Num: freteinternacionalmaritimo20Num,
+                impostoimpII: impostoimpII,
+                impostoProdIndIPI: impostoProdIndIPI,
+                PIS_PASEP: PIS_PASEP,
+                valorCOFINS: valorCOFINS,
+                valorICMS: valorICMS,
+                ValorLI: ValorLI,
+                taxaLI: taxaLI,
+                taxaduimp: taxaduimp
+            };
+
+            $.ajax({
+                url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm-2',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+
+            exibirModal();
+
+            function exibirModal() {
+                var modalBodyContent = document.getElementById('modal-body-content');
+                var modalType = modal; 
+                var acondicionamentoType = acondicionamento;
+
+                var htmlContent = `
+                        <table>
+                        <tr><th>Variável</th><th>Valor</th> </tr>
+                        <tr><td>Descrição da Mercadoria</td><td>${descricao}</td></tr>
+                        <tr><td>Classificação Fiscal-SH/NCM</td><td>${classificacao}</td></tr>
+                        <tr><td>II</td><td>${ii}</td></tr>
+                        <tr><td>PIS</td><td>${pis}</td></tr>
+                        <tr><td>IPI</td><td>${ipi}</td></tr>
+                        <tr><td>COFINS</td><td>${cofins}</td></tr>
+                        <tr><td>ICMS</td><td>${icms}</td></tr>
+                        <tr><td>Valor da Mercadoria</td><td>${valor}</td></tr>
+                        <tr><td>Modal</td><td>${modalType}</td></tr>
+                        <tr><td>Peso</td><td>${peso}</td></tr>
+                        <tr><td>Quantidade</td><td>${quantidade}</td></tr>
+                        <tr><td>Nº de LIs-LCPO</td><td>${lis}</td></tr>
+                        <tr><td>Nº de Adições à LI-LCPO</td><td>${li_lcpo}</td></tr>
+                        <tr>  <td>Nº de DI-DUIMP</td>  <td>${ndi_duimp}</td></tr>
+                        <tr><td>Nº de Adições à DI-DUIMP</td><td>${di_duimp}</td></tr>
+                        <tr><td>Local do Desembaraço Aduaneiro</td><td>${desembaraco}</td></tr>
+                        <tr><td>Tipo de Acondicionamento</td><td>${acondicionamento}</td></tr>
+                    `;
+                if (acondicionamentoType === 'containers'){
+                    htmlContent += `<tr><td>Tipo de Carga</td><td>${acondicionamentocontainer}</td></tr>`;
+                }
+                 
+                htmlContent += `<tr><td>Modal</td><td>${modal}</td></tr>`
+
+                if (modalType === 'maritimo') {
+                    htmlContent += `
+                        <tr><td>Container 20'</td><td>${container20Value}</td>/tr>
+                        <tr><td>Quantidade 20'</td><td>${quantity20Value}</td>/tr>
+                        <tr><td>Container 40'</td><td>${container40Value}</td>/tr>
+                        <tr><td>Quantidade 40'</td><td>${quantity40Value}</td>/tr>
+                        <tr><td>Container High Cube 40'</td><td>${containerHighCube40Value}</td>/tr>
+                        <tr><td>Quantidade High Cube 40'</td><td>${quantityHighCube40Value}</td>/tr>
+                        <tr><td>Graneleiro Dry 20'</td><td>${GraneleiroDry20Value}</td>/tr>
+                        <tr><td>Quantidade Graneleiro Dry 20'</td><td>${quantityGraneleiroDry20Value}</td>/tr>
+                        <tr><td>Flat Rack 20'</td><td>${FlatRack20Value}</td>/tr>
+                        <tr><td>Quantidade Flat Rack 20'</td><td>${quantityFlatRack20Value}</td>/tr>
+                        <tr><td>Flat Rack 40'</td><td>${FlatRack40Value}</td>/tr>
+                        <tr><td>Quantidade Flat Rack 40'</td><td>${quantityFlatRack40Value}</td>/tr>
+                        <tr><td>Open Top 20'</td><td>${OpenTop20Value}</td>/tr>
+                        <tr><td>Quantidade Open Top 20'</td><td>${quantityOpenTop20Value}</td>/tr>
+                        <tr><td>Open Top 40'</td><td>${OpenTop40Value}</td>/tr>
+                        <tr><td>Quantidade Open Top 40'</td><td>${quantityOpenTop40Value}</td>/tr>
+                        <tr><td>Refrigerado 20'</td><td>${Refrigerado20Value}</td>/tr>
+                        <tr><td>Quantidade Refrigerado 20'</td><td>${quantityRefrigerado20Value}</td>/tr>
+                        <tr><td>Refrigerado 40'</td><td>${Refrigerado40Value}</td>/tr>
+                        <tr><td>Quantidade Refrigerado 40'</td><td>${quantityRefrigerado40Value}</td>/tr>
+                        <tr><td>Total de Containers</td><td>${totalcontainer}</td>/tr>
+                        `;
+                } else if (modalType === 'aereo') {
+                    htmlContent += `
+                        <tr><td>Valor total da Cubagem Aerea</td><td>${somaMetragensCubicas}</td></tr>`;
+                }
+
+                htmlContent += `
+                        <tr><td>Porto/Aeroporto de Embarque-País</td><td>${continenteorigem}</td>/tr>
                         <tr>
                           <td>Porto/Aeroporto de Destino-País</td>
                           <td>${destino}</td>
@@ -926,168 +937,48 @@
                           <td>${valor}</td>
                         </tr>
                         <tr>
-                          <td>Ger_Log_Importacao</td>
+                          <td>Taxa Dólar</td>
+                          <td>${taxadolar}</td>
+                        </tr>
+                        <tr>
+                          <td>Gerenciamento Logístico Importação</td>
                           <td>${Ger_Log_Importacao}</td>
-                        </tr>
-                        <tr>
-                          <td>Container 20'</td>
-                          <td>${container20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade 20'</td>
-                          <td>${quantity20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Container 40'</td>
-                          <td>${container40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade 40'</td>
-                          <td>${quantity40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Container High Cube 40'</td>
-                          <td>${containerHighCube40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade High Cube 40'</td>
-                          <td>${quantityHighCube40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Graneleiro Dry 20'</td>
-                          <td>${GraneleiroDry20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Graneleiro Dry 20'</td>
-                          <td>${quantityGraneleiroDry20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Flat Rack 20'</td>
-                          <td>${FlatRack20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Flat Rack 20'</td>
-                          <td>${quantityFlatRack20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Flat Rack 40'</td>
-                          <td>${FlatRack40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Flat Rack 40'</td>
-                          <td>${quantityFlatRack40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Open Top 20'</td>
-                          <td>${OpenTop20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Open Top 20'</td>
-                          <td>${quantityOpenTop20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Open Top 40'</td>
-                          <td>${OpenTop40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Open Top 40'</td>
-                          <td>${quantityOpenTop40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Refrigerado 20'</td>
-                          <td>${Refrigerado20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Refrigerado 20'</td>
-                          <td>${quantityRefrigerado20Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Refrigerado 40'</td>
-                          <td>${Refrigerado40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Quantidade Refrigerado 40'</td>
-                          <td>${quantityRefrigerado40Value}</td>
-                        </tr>
-                        <tr>
-                          <td>Total de Containers</td>
-                          <td>${totalcontainer}</td>
-                        </tr>
-                        <tr>
-                          <td>Taxa Siscomex</td>
-                          <td>${taxasiscomex}</td>
-                        </tr>
-                        <tr>
-                          <td>Taxa ICMS</td>
-                          <td>${taxaicms}</td>
-                        </tr>
-                        <tr>
-                          <td>Taxa de Desconsolidação BL/AWB</td>
-                          <td>${taxaDesconsolidacaoblawb}</td>
-                        </tr>
-                        <tr>
-                          <td>Taxa Sindicato Aduaneiro</td>
-                          <td>${taxaSindicatoAduaneiro}</td>
-                        </tr>
-                        <tr>
-                          <td>Frete Internacional Marítimo</td>
-                          <td>${freteinternacionalmaritimoNum}</td>
-                        </tr>
-                        <tr>
-                          <td>Frete Internacional Aéreo</td>
-                          <td>${freteinternacionalaereo}</td>
-                        </tr>
-                        <tr>
-                          <td>Frete Internacional Marítimo 40'</td>
-                          <td>${freteinternacionalmaritimo40Num}</td>
-                        </tr>
-                        <tr>
-                          <td>Frete Internacional Marítimo 20'</td>
-                          <td>${freteinternacionalmaritimo20Num}</td>
-                        </tr>
-                        <tr>
-                          <td>Imposto Imp. Importação (II)</td>
-                          <td>${impostoimpII}</td>
-                        </tr>
-                        <tr>
-                          <td>Imposto Prod. Ind. (IPI)</td>
-                          <td>${impostoProdIndIPI}</td>
-                        </tr>
-                        <tr>
-                          <td>PIS/PASEP</td>
-                          <td>${PIS_PASEP}</td>
-                        </tr>
-                        <tr>
-                          <td>Valor COFINS</td>
-                          <td>${valorCOFINS}</td>
-                        </tr>
-                        <tr>
-                          <td>Valor ICMS</td>
-                          <td>${valorICMS}</td>
-                        </tr>
-                        <tr>
-                          <td>Valor LI</td>
-                          <td>${ValorLI}</td>
-                        </tr>
-                        <tr>
-                          <td>Taxa LI</td>
-                          <td>${taxaLI}</td>
-                        </tr>
-                        <tr>
-                          <td>Taxa DUIMP</td>
-                          <td>${taxaduimp}</td>
-                        </tr>
-                      </table>
-                    `;
-                
-                    // Exibir o modal
-                    var myModal = new bootstrap.Modal(document.getElementById('resultado'));
-                    myModal.show();
+                        </tr>`
+
+                if (modalType === 'maritimo') {
+                    htmlContent += ` <tr><td>Frete Internacional Marítimo</td><td>${freteinternacionalmaritimoNum}</td></tr>`;
+                        
+                }else if (modalType === 'aereo') {
+                    htmlContent += `<tr><td>Frete Internacional Aéreo</td><td>${freteinternacionalaereo}</td></tr>`;
                 }
+
+                htmlContent += `
+                    <tr><td>Seguro Internacional Marítimo/Aéreo</td><td>${segurointernacional}</td></tr>
+                    <tr><td>Imposto Imp. Importação (II)</td><td>${impostoimpII}</td></tr>
+                    <tr><td>Imposto Prod. Ind. (IPI)</td><td>${impostoProdIndIPI}</td></tr>
+                    <tr><td>PIS/PASEP-Programa de Integração Social</td><td>${PIS_PASEP}</td></tr>
+                    <tr><td>COFINS-Contribuição para Financiamento da Seguridade Social</td><td>${valorCOFINS}</td></tr>
+                    <tr><td>Taxa Siscomex</td><td>${taxasiscomex}</td>
+                    <tr><td>ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação</td><td>${valorICMS}</td></tr>
+                    <tr><td>Taxa Administrativa de Emissão de Licença de Importação</td><td>${ValorLI}</td></tr>
+                    <tr><td>Taxa de Desconsolidação de B/L/AWB</td><td>50</td></tr>
+                    <tr><td>Taxa do Sindicato de Despachantes Aduaneiros-Opcional</td><td>291.40</td></tr>
+                    <tr><td>Desembaraço Aduaneiro/DUIMP</td><td>${taxaduimp}</td></tr>
+                    `;                        
+
+                htmlContent += `</table>`;
+
+                modalBodyContent.innerHTML = htmlContent;
+
+                // Exibir o modal
+                var myModal = new bootstrap.Modal(document.getElementById('resultado'));
+                myModal.show();
+
+            }
 
         }
 
-        
+
     </script>
 </body>
 
