@@ -724,6 +724,97 @@
                 //ICMS-Imposto Circulação de Mercadorias, bens e serviços-Importação
                 var valorICMS = (valorNum + impostoimpII + impostoProdIndIPI + taxasiscomexNum) * (icmsNum / 100);
 
+                // Tabela Portunave
+                //Posicionamento para Vistoria
+                var PsparaVistoria = (totalcontainer * 1071) * taxadolar;
+
+                //Posicionamento para Pesagem
+                var PsparaPesagem = (totalcontainer * 1071) * taxadolar;
+
+                //Posicionamento para Vistoria Scanner
+                var PsparaVistoriaScanner = (totalcontainer * 2000) * taxadolar;
+                
+                //Posicionamento para Expurgo
+                var psparaExpurgo = (totalcontainer * 1187) * taxadolar;
+
+                //Vistoria Scanner
+                var vistoriaScanner = (totalcontainer * 929) * taxadolar;
+
+                //Posicionamento Desova/Ova (Dry)
+                var psDesova_OvaDry = (totalcontainer * 4429)*taxadolar;
+
+                //Posicionamento Desova/Ova de Mudança
+                var psDesova_OvaMudanca = (totalcontainer * 12780)*taxadolar;
+
+                //Crossdocking (Dry)
+                var Crossdocking_Dry = (totalcontainer * 2251)*taxadolar;
+
+                //Crossdocking (Reefer)
+                var Crossdocking_Reefer = (totalcontainer * 2885)*taxadolar;
+
+                //Movimento Liberação DTA
+                var Movimento_Liberação_DTA = (totalcontainer * 1719)*taxadolar;
+
+                //Remoneação de Navio ou Porto - Exportação
+                var Rem_NavioPorto_Exportação = (totalcontainer * 750) * taxadolar;
+
+                //Remoneação de Navio ou Porto - Importação
+                var Rem_NavioPorto_Importação = (totalcontainer * 1049)*taxadolar;
+
+                //Retirada de Amostras
+                var Retirada_Amostras = (totalcontainer*220)*taxadolar;
+
+                //Etiquetagem
+                var Etiquetagem = (totalcontainer * 8)*taxadolar;
+
+                //Disponibilização Carreta Contenção
+                var Disp_Carreta_Cont = (totalcontainer * 4164) * taxadolar;
+
+                //Diária Carreta Contenção
+                var Dia_Carreta_Cont = (totalcontainer * 3329)*taxadolar;
+
+                //Retirada e Colocação de Lacre
+                var Ret_Col_Lacre = (totalcontainer*126)*taxadolar;
+
+                //Pesagem de Contêiner (saída via gate)
+                var Pes_Container = (totalcontainer*126)*taxadolar;
+
+                //Solicitação Especial de Agendamento de Importação
+                var Soli_Especial_Agnd_Imp = (totalcontainer*613)*taxadolar;
+
+                //Fornecimento de fotografias
+                var Forn_fotografias = (totalcontainer*105)*taxadolar;
+
+                //Genset
+                var Genset = (totalcontainer * 1288)*taxadolar;
+
+                //NO SHOW - Importação
+                var NO_SHOW_Imp = (totalcontainer*393)*taxadolar;
+
+                //Posicionamento Inclusão de Adesivos de Carga Perigosa
+                var PosInclu_AdesivosCargaPerigosa = (totalcontainer*1096)*taxadolar;
+
+                //Total Serviços Extras 
+                var Total_Servicos_Extras = PsparaVistoria + PsparaPesagem + PsparaVistoriaScanner + psparaExpurgo + vistoriaScanner + psDesova_OvaDry + psDesova_OvaMudanca+ Crossdocking_Dry + Crossdocking_Reefer + Movimento_Liberação_DTA + Rem_NavioPorto_Exportação + Rem_NavioPorto_Importação + Retirada_Amostras + Etiquetagem + Disp_Carreta_Cont + Dia_Carreta_Cont + Ret_Col_Lacre + Pes_Container + Soli_Especial_Agnd_Imp + Forn_fotografias + Genset + NO_SHOW_Imp + PosInclu_AdesivosCargaPerigosa
+
+                //Levantes 
+                //Open Top
+                var opentoptotalqtd = quantityOpenTop20Value + quantityOpenTop40Value;
+                var FlatRacktotalqtd = quantityFlatRack20Value + quantityFlatRack40Value;
+                var normalqtd = quantity20Value + quantity40Value + quantityHighCube40Value + quantityGraneleiroDry20Value + quantityRefrigerado20Value + quantityRefrigerado40Value;
+
+                if (opentoptotalqtd > 0 ){
+                    var opentop = (opentoptotalqtd * 967 )* taxadolar;
+                }
+                if(FlatRacktotalqtd > 0 ){
+                    var FlatRack = (FlatRacktotalqtd * 967)*taxadolar;
+                }if(normalqtd > 0){
+                    var normal = (normalqtd * 376)*taxadolar;
+                }
+
+                var totaLevantes = opentop + FlatRack + normal
+                
+
             } else if (modal == 'aereo') {
                 if (continenteorigem == 'Americano-USA') {
                     var freteinternacionalaereo = somaMetragensCubicas * 7;
@@ -859,11 +950,39 @@
                 ValorLI: ValorLI,
                 taxaLI: taxaLI,
                 taxaduimpdolar: taxaduimpdolar,
-                custooperacao:custooperacao
+                custooperacao:custooperacao,
+                PsparaVistoria:PsparaVistoria,
+                PsparaPesagem:PsparaPesagem,
+                PsparaVistoriaScanner:PsparaVistoriaScanner,
+                psparaExpurgo:psparaExpurgo,
+                vistoriaScanner:vistoriaScanner,
+                psDesova_OvaDry:psDesova_OvaDry,
+                psDesova_OvaMudanca:psDesova_OvaMudanca,
+                Crossdocking_Dry:Crossdocking_Dry,
+                Crossdocking_Reefer:Crossdocking_Reefer,
+                Movimento_Liberação_DTA:Movimento_Liberação_DTA,
+                Rem_NavioPorto_Exportação:Rem_NavioPorto_Exportação,
+                Rem_NavioPorto_Importação:Rem_NavioPorto_Importação,
+                Retirada_Amostras:Retirada_Amostras,
+                Etiquetagem:Etiquetagem,
+                Disp_Carreta_Cont:Disp_Carreta_Cont,
+                Dia_Carreta_Cont:Dia_Carreta_Cont,
+                Ret_Col_Lacre:Ret_Col_Lacre,
+                Pes_Container:Pes_Container,
+                Soli_Especial_Agnd_Imp:Soli_Especial_Agnd_Imp,
+                Forn_fotografias: Forn_fotografias,
+                Genset:Genset,
+                NO_SHOW_Imp:NO_SHOW_Imp,
+                PosInclu_AdesivosCargaPerigosa:PosInclu_AdesivosCargaPerigosa,
+                Total_Servicos_Extras:Total_Servicos_Extras,
+                opentop:opentop,
+                FlatRack:FlatRack,
+                normal:normal,
+                totaLevantes:totaLevantes
             };
 
             $.ajax({
-                url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/formsmvm-2',
+                url: 'https://n8.mvmsolucoescorporativas.com.br/webhook/calculos',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(data),
@@ -912,27 +1031,27 @@
 
                 if (modalType === 'maritimo') {
                     htmlContent += `
-                        <tr><td>Container 20'</td><td>${container20Value}</td>/tr>
-                        <tr><td>Quantidade 20'</td><td>${quantity20Value}</td>/tr>
-                        <tr><td>Container 40'</td><td>${container40Value}</td>/tr>
-                        <tr><td>Quantidade 40'</td><td>${quantity40Value}</td>/tr>
-                        <tr><td>Container High Cube 40'</td><td>${containerHighCube40Value}</td>/tr>
-                        <tr><td>Quantidade High Cube 40'</td><td>${quantityHighCube40Value}</td>/tr>
-                        <tr><td>Graneleiro Dry 20'</td><td>${GraneleiroDry20Value}</td>/tr>
-                        <tr><td>Quantidade Graneleiro Dry 20'</td><td>${quantityGraneleiroDry20Value}</td>/tr>
-                        <tr><td>Flat Rack 20'</td><td>${FlatRack20Value}</td>/tr>
-                        <tr><td>Quantidade Flat Rack 20'</td><td>${quantityFlatRack20Value}</td>/tr>
-                        <tr><td>Flat Rack 40'</td><td>${FlatRack40Value}</td>/tr>
-                        <tr><td>Quantidade Flat Rack 40'</td><td>${quantityFlatRack40Value}</td>/tr>
-                        <tr><td>Open Top 20'</td><td>${OpenTop20Value}</td>/tr>
-                        <tr><td>Quantidade Open Top 20'</td><td>${quantityOpenTop20Value}</td>/tr>
-                        <tr><td>Open Top 40'</td><td>${OpenTop40Value}</td>/tr>
-                        <tr><td>Quantidade Open Top 40'</td><td>${quantityOpenTop40Value}</td>/tr>
-                        <tr><td>Refrigerado 20'</td><td>${Refrigerado20Value}</td>/tr>
-                        <tr><td>Quantidade Refrigerado 20'</td><td>${quantityRefrigerado20Value}</td>/tr>
-                        <tr><td>Refrigerado 40'</td><td>${Refrigerado40Value}</td>/tr>
-                        <tr><td>Quantidade Refrigerado 40'</td><td>${quantityRefrigerado40Value}</td>/tr>
-                        <tr><td>Total de Containers</td><td>${totalcontainer}</td>/tr>
+                        <tr><td>Container 20'</td><td>${container20Value}</td> </tr>
+                        <tr><td>Quantidade 20'</td><td>${quantity20Value}</td></tr>
+                        <tr><td>Container 40'</td><td>${container40Value}</td></tr>
+                        <tr><td>Quantidade 40'</td><td>${quantity40Value}</td></tr>
+                        <tr><td>Container High Cube 40'</td><td>${containerHighCube40Value}</td></tr>
+                        <tr><td>Quantidade High Cube 40'</td><td>${quantityHighCube40Value}</td></tr>
+                        <tr><td>Graneleiro Dry 20'</td><td>${GraneleiroDry20Value}</td></tr>
+                        <tr><td>Quantidade Graneleiro Dry 20'</td><td>${quantityGraneleiroDry20Value}</td></tr>
+                        <tr><td>Flat Rack 20'</td><td>${FlatRack20Value}</td></tr>
+                        <tr><td>Quantidade Flat Rack 20'</td><td>${quantityFlatRack20Value}</td></tr>
+                        <tr><td>Flat Rack 40'</td><td>${FlatRack40Value}</td></tr>
+                        <tr><td>Quantidade Flat Rack 40'</td><td>${quantityFlatRack40Value}</td></tr>
+                        <tr><td>Open Top 20'</td><td>${OpenTop20Value}</td></tr>
+                        <tr><td>Quantidade Open Top 20'</td><td>${quantityOpenTop20Value}</td></tr>
+                        <tr><td>Open Top 40'</td><td>${OpenTop40Value}</td></tr>
+                        <tr><td>Quantidade Open Top 40'</td><td>${quantityOpenTop40Value}</td></tr>
+                        <tr><td>Refrigerado 20'</td><td>${Refrigerado20Value}</td></tr>
+                        <tr><td>Quantidade Refrigerado 20'</td><td>${quantityRefrigerado20Value}</td></tr>
+                        <tr><td>Refrigerado 40'</td><td>${Refrigerado40Value}</td></tr>
+                        <tr><td>Quantidade Refrigerado 40'</td><td>${quantityRefrigerado40Value}</td></tr>
+                        <tr><td>Total de Containers</td><td>${totalcontainer}</td></tr>
                         `;
                 } else if (modalType === 'aereo') {
                     htmlContent += `
@@ -940,7 +1059,7 @@
                 }
 
                 htmlContent += `
-                        <tr><td>Porto/Aeroporto de Embarque-País</td><td>${continenteorigem}</td>/tr>
+                        <tr><td>Porto/Aeroporto de Embarque-País</td><td>${continenteorigem}</td></tr>
                         <tr>
                           <td>Porto/Aeroporto de Destino-País</td>
                           <td>${destino}</td>
